@@ -1,5 +1,4 @@
 ---
-
 - name: php | add custom xdebug configuration
   template:
     src: xdebug.ini.j2
