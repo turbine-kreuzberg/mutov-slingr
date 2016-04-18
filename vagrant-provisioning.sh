@@ -57,7 +57,7 @@ fi
 # rewrite apache default vhost
 APACHE_DEFAULT_HOST="/etc/apache2/sites-available/000-default.conf"
 DOCROOT_OLD="/var/www/html"
-DOCROOT="/var/www/data-generator/web"
+DOCROOT="/var/www/mutov-slingr/web"
 VHOST_MODIFIED=$(grep "$DOCROOT" $APACHE_DEFAULT_HOST)
 
 if [ -z "$VHOST_MODIFIED" ]; then

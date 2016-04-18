@@ -1,5 +1,5 @@
 
-# DATA GENERATOR
+# MutovSlingr - a data test generator
 
 ## Installed tools/packages
 - Apache 2.4
@@ -14,4 +14,4 @@
 
 ## URL
 
-http://data-generator.votum-local.de
+http://mutov-slingr.votum-local.de

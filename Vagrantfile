@@ -4,9 +4,9 @@
 VM_BOX="bento/ubuntu-14.04"
 VM_MEMORY="4096"
 VM_IP="33.33.33.77"
-VM_NAME="data-generator"
-VM_HOSTNAME="data-generator.votum-local.de"
-PATH_APP="/var/www/data-generator"
+VM_NAME="mutov-slingr"
+VM_HOSTNAME="mutov-slingr.votum-local.de"
+PATH_APP="/var/www/mutov-slingr"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
