@@ -11,7 +11,12 @@ settings:
     memory_limit: 1024M
 extensions:
     enabled:
+        - Codeception\Extension\Recorder
         - Codeception\Extension\RunFailed
+        - Codeception\Extension\Logger
+#    config:
+#        Codeception\Extension\Recorder:
+#            delete_successful: false
 modules:
     config:
         Db:
