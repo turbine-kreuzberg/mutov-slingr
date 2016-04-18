@@ -1,0 +1,25 @@
+---
+- name: oh-my-zsh | set fact
+  set_fact:
+    zshuser: "{{ apache_user }}"
+
+- name: oh-my-zsh | install zsh
+  package:
+    name: zsh
+    state: present
+
+- name: oh-my-zsh | clone git repo
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh.git
+    dest: '/home/{{ zshuser }}/.oh-my-zsh'
+
+- name: oh-my-zsh | deploy .zshrc
+  template:
+    src: zshrc.ini
+    dest: '/home/{{ zshuser }}/.zshrc'
+    owner: '{{ zshuser }}'
+
+- name: oh-my-zsh | Set zsh as default shell
+  user:
+    name: '{{ zshuser }}'
+    shell: /bin/zsh

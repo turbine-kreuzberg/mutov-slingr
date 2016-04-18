@@ -1,0 +1,78 @@
+---
+common:
+  packages:
+  - sudo
+#  - ansible
+#  - bash-completion
+#  - python-pycurl
+  - git
+#  - htop
+#  - tree
+#  - vim
+  - nano
+  - curl
+#  - zip
+#  - unzip
+#  - rsync
+#  - wget
+#  - ant
+#  - screen
+#  - mc
+#  - net-tools
+
+apache_listen_port: 80
+apache_vhosts_filename: "mutov-slingr.votum-local.de.conf"
+apache_remove_default_vhost: true
+apache_vhosts:
+  - servername: "mutov-slingr.votum-local.de"
+    documentroot_base: "/var/www/mutov-slingr"
+    documentroot: "/var/www/mutov-slingr/web"
+#    extra_parameters: "AddType application/x-httpd-php .php"
+apache_user: vagrant
+apache_group: vagrant
+
+mysql_root_password: root
+mysql_databases:
+  - name: slingr
+    encoding: utf8
+    collation: utf8_general_ci
+mysql_users:
+  - name: slingr
+    host: "%"
+    password: slingr
+    priv: "slingr.*:ALL"
+mysql_packages:
+  - mariadb-server
+mysql_daemon: mysql
+mysql_log_error: /var/log/mysql/mysql.log
+mysql_syslog_tag: mysqld
+mysql_pid_file: /var/run/mysqld/mysqld.pid
+
+php_version: "5.6"
+php_opcache_enable: "0"
+php_enable_apc: true
+php_memory_limit: "256M"
+php_max_execution_time: "90"
+php_upload_max_filesize: "256M"
+php_packages:
+  - libapache2-mod-php5
+  - php5
+  - php5-mcrypt
+  - php5-cli
+  - php5-common
+  - php5-curl
+  - php5-dev
+#  - php5-fpm
+  - php5-gd
+#  - php5-mbstring
+  - php5-mysql
+  - php5-xdebug
+  - php-apc
+#  - php5-xml
+
+project_root: "{{ apache_vhosts[0].documentroot }}"
+
+# GitHub OAuth token (used to help overcome API rate limits).
+composer_github_oauth_token: 'd4faa577b24e168bffc74bb7dd50600edd563db1'
+composer_home_owner: vagrant
+composer_home_group: vagrant

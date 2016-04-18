@@ -47,8 +47,8 @@ Vagrant.configure(2) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  config.vm.synced_folder "./src", "#{PATH_APP}"
 #  config.vm.synced_folder "./bin", "/home/vagrant/bin"
+  config.vm.synced_folder "./src", "#{PATH_APP}", group: "www-data"
 
   if Vagrant.has_plugin?('vagrant-hostmanager')
     config.hostmanager.enabled = true
@@ -81,5 +81,16 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-   config.vm.provision "shell", path: "vagrant-provisioning.sh"
+#   config.vm.provision "shell", path: "vagrant-provisioning.sh"
+
+    config.vm.provision "ansible" do |ansible|
+        ansible.verbose = ""
+        ansible.galaxy_command = "ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path}"
+        ansible.galaxy_role_file = "./ansible/requirements.yml"
+        ansible.galaxy_roles_path = "./ansible/roles"
+        ansible.playbook = "./ansible/playbook.yml"
+        ansible.inventory_path = "./ansible/environments/dev/inventory"
+        ansible.limit = 'all'
+    end
+
 end

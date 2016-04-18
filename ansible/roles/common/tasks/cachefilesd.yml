@@ -1,0 +1,16 @@
+---
+- name: common | install cachefilesd
+  package:
+    name: cachefilesd
+    state: present
+
+- name: common | copy cachefilesd config
+  template:
+    src: cachefilesd
+    dest: /etc/default/cachefilesd
+
+- name: common | ensure cachefilesd is running
+  service:
+    name: cachefilesd
+    state: started
+    enabled: yes

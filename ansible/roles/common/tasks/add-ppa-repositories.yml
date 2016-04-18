@@ -1,0 +1,24 @@
+---
+
+- name: common | ensure required package are installed
+  package:
+    name: python-apt
+    state: present
+
+- name: common | add PPA repository for php 5.3
+  apt_repository:
+    repo: 'ppa:sergey-dryabzhinsky/php53'
+    update_cache: true
+  when: "ansible_os_family == 'Debian' and php_version == '5.3'"
+
+- name: common | add PPA repository for php 5.4
+  apt_repository:
+    repo: 'ppa:ondrej/php5-oldstable'
+    update_cache: true
+  when: "ansible_os_family == 'Debian' and php_version == '5.4'"
+
+- name: common | add PPA repository for php 5.6
+  apt_repository:
+    repo: 'ppa:ondrej/php5-5.6'
+    update_cache: true
+  when: "ansible_os_family == 'Debian' and php_version == '5.6'"

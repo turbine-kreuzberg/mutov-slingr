@@ -1,3 +1,7 @@
 /.idea
 /.vagrant
+*.retry
 /src/vendor
+/src/web/plugins
+/src/web/resources
+/ansible/roles/geerlingguy.*

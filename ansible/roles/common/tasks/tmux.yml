@@ -1,0 +1,10 @@
+---
+- name: common | install tmux
+  package:
+    name: tmux
+    state: present
+
+- name: common | copy tmux config
+  template:
+    src: tmux.conf
+    dest: ~/.tmux.conf

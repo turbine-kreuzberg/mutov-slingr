@@ -1,0 +1,18 @@
+---
+- name: apply common configuration to all nodes
+  hosts: all
+  become: true
+  become_method: sudo
+  vars_files:
+      - "environments/all/group_vars/global.yml"
+      - "environments/all/group_vars/credentials.yml"
+      - "environments/{{ env }}/group_vars/common.yml"
+  roles:
+    - { role: common, become_user: root  }
+    - { role: geerlingguy.apache, become_user: root }
+    - { role: geerlingguy.mysql, become_user: root }
+    - { role: geerlingguy.php, become_user: root }
+    - { role: geerlingguy.composer, become_user: root }
+  post_tasks:
+    - file: src={{ apache_vhosts[0].documentroot_base }}/vendor/generatedata/resources dest={{ apache_vhosts[0].documentroot }}/resources state=link
+    - file: src={{ apache_vhosts[0].documentroot_base }}/vendor/generatedata/plugins dest={{ apache_vhosts[0].documentroot }}/plugins state=link

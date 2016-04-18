@@ -1,0 +1,45 @@
+---
+- name: common | install packages
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items: '{{ common.packages }}'
+
+- name: common | add PPA repositories
+  include: add-ppa-repositories.yml
+  when: ansible_os_family == 'Debian' and php_version is defined
+
+- name: common | set up tmux
+  include: tmux.yml
+  when: common.tmux is defined and common.tmux == 1
+
+- name: common | set up cachefilesd
+  include: cachefilesd.yml
+  when: common.cachefilesd is defined and common.cachefilesd == 1
+
+- name: common | set up NTP
+  include: ntp.yml
+  when: common.ntp is defined and common.ntp == 1
+
+- name: common | set up OhMyZsh
+  include: ohmyzsh.yml
+  when: common.ohmyzsh is defined and common.ohmyzsh == 1
+
+- name: Add a ~/bin to PATH
+  lineinfile:
+    dest: ~/.bashrc
+    line: 'PATH="$HOME/bin:$PATH"'
+
+- name: Make sure ~/bin exists
+  file:
+    path: ~/bin
+    state: directory
+
+- name: Copy common files to ~/bin
+  copy:
+    src: '{{ item }}'
+    dest: ~/bin/
+    mode: 755
+  with_fileglob:
+    - bin/*
+

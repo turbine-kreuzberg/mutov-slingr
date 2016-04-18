@@ -1,0 +1,13 @@
+---
+- name: common | install NTP
+  package:
+    name: ntp
+    state: present
+  tags: ntp
+
+- name: common | ensure NTP server is running
+  service:
+    name: ntp
+    state: started
+    enabled: yes
+  tags: ntp
