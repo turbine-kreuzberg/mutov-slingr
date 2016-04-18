@@ -1,0 +1,6 @@
+---
+
+- name: php | add custom xdebug configuration
+  template:
+    src: xdebug.ini.j2
+    dest: /etc/php5/mods-available/xdebug.ini

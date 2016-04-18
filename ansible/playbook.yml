@@ -12,6 +12,7 @@
     - { role: geerlingguy.apache, become_user: root }
     - { role: geerlingguy.mysql, become_user: root }
     - { role: geerlingguy.php, become_user: root }
+    - { role: votum.php, become_user: root }
     - { role: geerlingguy.composer, become_user: root }
   post_tasks:
     - file: src={{ apache_vhosts[0].documentroot_base }}/vendor/generatedata/resources dest={{ apache_vhosts[0].documentroot }}/resources state=link
