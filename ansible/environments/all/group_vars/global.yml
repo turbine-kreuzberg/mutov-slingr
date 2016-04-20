@@ -27,7 +27,9 @@ apache_vhosts:
   - servername: "mutov-slingr.votum-local.de"
     documentroot_base: "/var/www/mutov-slingr"
     documentroot: "/var/www/mutov-slingr/web"
-#    extra_parameters: "AddType application/x-httpd-php .php"
+#  - servername: "app.mutov-slingr.votum-local.de"
+#    documentroot_base: "/var/www/mutov-slingr"
+#    documentroot: "/var/www/mutov-slingr/app"
 apache_user: vagrant
 apache_group: vagrant
 
