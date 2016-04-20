@@ -1,5 +1,8 @@
 {
     "require": {
-        "codeception/codeception": "^2.1"
+        "codeception/codeception": "^2.1",
+        "slim/slim": "^3.0",
+        "guzzlehttp/guzzle": "~6.0",
+        "tdt/json": "^1.0"
     }
 }
