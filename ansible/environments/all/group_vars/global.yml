@@ -24,12 +24,12 @@ apache_listen_port: 80
 apache_vhosts_filename: "mutov-slingr.votum-local.de.conf"
 apache_remove_default_vhost: true
 apache_vhosts:
-  - servername: "mutov-slingr.votum-local.de"
+  - servername: "api.mutov-slingr.votum-local.de"
     documentroot_base: "/var/www/mutov-slingr"
     documentroot: "/var/www/mutov-slingr/web"
-#  - servername: "app.mutov-slingr.votum-local.de"
-#    documentroot_base: "/var/www/mutov-slingr"
-#    documentroot: "/var/www/mutov-slingr/app"
+  - servername: "mutov-slingr.votum-local.de"
+    documentroot_base: "/var/www/mutov-slingr/app"
+    documentroot: "/var/www/mutov-slingr/app/web"
 apache_user: vagrant
 apache_group: vagrant
 
@@ -54,6 +54,7 @@ php_version: "5.6"
 php_opcache_enable: "0"
 php_enable_apc: true
 php_memory_limit: "256M"
+php_display_errors: "On"
 php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
 php_packages:
