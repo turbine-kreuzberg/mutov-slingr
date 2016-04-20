@@ -1,0 +1,77 @@
+{
+  "templates": [
+    {
+      "label": "category",
+      "definition": {
+        "numRows": 10,
+        "gdNumRowsToGenerate": 10,
+        "countries": [],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 1
+            }
+          },
+          {
+            "type": "Tree",
+            "title": "parent",
+            "settings": {
+              "autoIncRowNum": 1,
+              "maxSiblings": 5
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "label",
+            "settings": {
+              "numWords": 3
+            }
+          }
+        ],
+        "export": {
+          "type": "JSON",
+          "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+          }
+        }
+      }
+    },
+    {
+      "label": "product",
+      "definition": {
+        "numRows": 100,
+        "gdNumRowsToGenerate": 100,
+        "countries": [],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 1
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "label",
+            "settings": {
+              "numWords": 3
+            }
+          }
+        ],
+        "export": {
+          "type": "JSON",
+          "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+          }
+        }
+      }
+    }
+  ]
+}
+

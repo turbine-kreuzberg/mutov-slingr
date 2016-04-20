@@ -17,7 +17,8 @@ class HomeController
      */
     public function indexAction(Request $request, Response $response, $args)
     {
-        return '> You suck '.$args['name'].'! #NOT';
+        return 'There no place like /home';
+//        return '> You suck '.$args['name'].'! #NOT';
     }
     
 }
