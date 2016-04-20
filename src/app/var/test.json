@@ -72,6 +72,11 @@
         }
       }
     }
+  ],
+  "relations":[
+    {"product.category_id": {"from":"product.id","to":"category.id"}},
+    {"order.customer_id": {"from":"customer.id","to":"order.id"}},
+    {"order.product_id": {"from":"product.id","to":"order.id"}}
   ]
 }
 

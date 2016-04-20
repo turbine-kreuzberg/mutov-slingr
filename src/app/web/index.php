@@ -27,11 +27,15 @@ $app = new Slim\App();
 * is an anonymous function.
 */
 $app->get('/', function ($request, $response, $args) {
-//    return 'test';
     return $response->withRedirect('/home');
 });
 
 $app->get('/home', 'MutovSlingr\Controller\HomeController:indexAction');
+
+$app->get('/test', 'MutovSlingr\Controller\HomeController:testAction');
+
+$app->get('/process', 'MutovSlingr\Controller\HomeController:processAction');
+
 $app->getContainer()['errorHandler'] = function ( $c ) {
     return function ( $request, $response, \Exception $exception ) use ( $c) {
 
