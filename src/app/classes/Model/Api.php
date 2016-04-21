@@ -8,6 +8,7 @@
 
 namespace MutovSlingr\Model;
 
+use GuzzleHttp\Client;
 
 class Api
 {
@@ -15,26 +16,19 @@ class Api
     const _API_END_POINT = 'http://api.mutov-slingr.votum-local.de/api/v1/data';
 
     /**
-     * @param $json
+     * @param string $json
      * @return mixed
      */
     public function apiCall($json)
     {
-        //open connection
-        $ch = curl_init();
+        print_r($json);
+        $client = new Client();
+        $process_result = $client->post(
+          self::_API_END_POINT,
+          ['json' => json_decode($json, true)]
+        );
 
-        //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, self::_API_END_POINT);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-
-        //execute post
-        $result = curl_exec($ch);
-        //close connection
-        curl_close($ch);
-
-        return $result;
+        return $process_result->getBody()->getContents();
     }
 
 

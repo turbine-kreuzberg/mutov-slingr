@@ -1,11 +1,13 @@
 <?php
 
-require '../../vendor/autoload.php';
+use MutovSlingr\Config\Container;
+use MutovSlingr\Config\Router;
 
+require '../../vendor/autoload.php';
 
 $app = new Slim\App();
 
-new \MutovSlingr\Config\Router($app);
-new \MutovSlingr\Config\Container($app->getContainer());
+new Router($app);
+new Container($app->getContainer());
 
 $app->run();
