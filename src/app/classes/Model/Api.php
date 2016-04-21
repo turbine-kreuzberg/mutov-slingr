@@ -9,6 +9,7 @@
 namespace MutovSlingr\Model;
 
 use GuzzleHttp\Client;
+use Slim\Interfaces\CollectionInterface;
 
 class Api
 {
@@ -20,11 +21,10 @@ class Api
 
     /**
      * Api constructor.
-     * @param array $config
+     * @param CollectionInterface $config
      */
-    public function __construct($config)
+    public function __construct(CollectionInterface $config)
     {
-
         $this->config = $config;
     }
 
@@ -36,7 +36,7 @@ class Api
     {
         $client = new Client();
         $process_result = $client->post(
-            $this->config['api']['host'],
+            $this->config->get('api_host'),
           ['json' => json_decode($json, true)]
         );
 

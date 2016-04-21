@@ -10,7 +10,7 @@ namespace MutovSlingr\Views;
 class ViewJson extends View
 {
     /**
-     * @param array|string $content
+     * @param array $content
      * @return string
      */
     public function render( array $content )

@@ -11,6 +11,7 @@ namespace MutovSlingr\Controller;
 use MutovSlingr\Core\Controller;
 use MutovSlingr\Loader\TemplateLoader;
 use MutovSlingr\Processor\TemplateProcessor;
+use Slim\Interfaces\CollectionInterface;
 
 /**
  * Class SlingrController
@@ -60,9 +61,9 @@ class SlingrController extends Controller
     }
 
     /**
-     * @param array $config
+     * @param CollectionInterface $config
      */
-    public function setConfig( $config )
+    public function setConfig(CollectionInterface $config )
     {
         $this->config = $config;
     }
