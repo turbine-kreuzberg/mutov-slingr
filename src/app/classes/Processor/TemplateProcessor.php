@@ -8,6 +8,7 @@
 
 namespace MutovSlingr\Processor;
 use MutovSlingr\Model\Api;
+use MutovSlingr\Pickers\RandomPicker;
 use Ospinto\dBug;
 
 
@@ -17,40 +18,85 @@ class TemplateProcessor
 
     const _TEMPLATES_FOLDER = '/var/www/mutov-slingr/app/var'; // NEED to be changed
 
+    protected $flatData = NULL;
 
-    public function processTemplate($templateFileName)
+
+    protected function getTemplate($templateFileName)
     {
-
-        $apiCall = new Api();
 
         $fullPath = self::_TEMPLATES_FOLDER.'/'.$templateFileName;
         $contents = file_get_contents($fullPath);
 
         $contents = json_decode($contents, true);
-        new dbug($contents);
+
+        return $contents;
+
+    }
+
+    protected function generateFlatData($templatesContent)
+    {
+
+        $apiCall = new Api();
 
         $entitiesList = array();
-        foreach($contents['templates'] as $template){
+        foreach($templatesContent as $template){
 
             $label = $template['label'];
             $definition = json_encode($template['definition']);
             $entitiesList[$label] = json_decode($apiCall->apiCall($definition),true);
         }
 
-        new dBug($entitiesList);
+        return $entitiesList;
 
-        foreach($contents['relations'] as $relation)
+    }
+
+
+
+    public function processTemplate($templateFileName)
+    {
+
+        $templateContent = $this->getTemplate($templateFileName);
+
+        echo('<h1>Template content</h1>');
+        new dbug($templateContent);
+
+        //exit;
+
+        $this->flatData = $this->generateFlatData($templateContent['templates']);
+
+        echo('<h1>Original data</h1>');
+        new dBug($this->flatData);
+
+
+
+        foreach($templateContent['relations'] as $tableTo=>$relation)
         {
-            $field = $relation['field'];
-            $entity = $relation['entity'];
-            $qnt = $relation['qnt'];
 
-            list($tableTo,$columnTo) = $this->splitField($field);
-            list($tableFrom,$columnFrom) = $this->splitField($entity);
+            //new dBug($tableTo);
+            //new dBug($relation);
 
-            $values = $this->pickValues($entitiesList[$tableFrom], $columnFrom, $qnt);
+            foreach($relation as  $columnTo=>$relationData){
 
-            new dbug($values);
+                //new dBug($columnTo);
+                //new dBug($relationData);
+
+                $foreignTable = $relationData['foreignTable'];
+                $foreignField = $relationData['foreignField'];
+                $pickerSettings = $relationData['pickerSettings'];
+                $pickerClass = 'MutovSlingr\\Pickers\\'.ucfirst($pickerSettings['type']).'Picker';
+
+
+                $pickerInstance = new $pickerClass($pickerSettings);
+                //$picker = new RandomPicker($pickerSettings);
+
+                $this->addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance);
+
+            }
+
+            echo('<h1>Result array</h1>');
+            new dbug($this->flatData);
+
+
 
 
         }
@@ -63,30 +109,18 @@ class TemplateProcessor
     }
 
 
-
-    private function pickValues($tableFrom, $columnFrom, $qnt)
+    protected function addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance)
     {
 
-        $columnList = array();
-        $list = array_rand($tableFrom, $qnt);
+        foreach($this->flatData[$tableTo] as $idx=>$item){
 
-        foreach($list as $item){
-            $columnList[] = $tableFrom[$item][$columnFrom];
+            $values = $pickerInstance->pickValues($this->flatData[$foreignTable], $foreignField);
 
+            $this->flatData[$tableTo][$idx][$columnTo] = implode(',',$values);
 
         }
 
-        return $columnList;
 
-    }
-
-
-    private function splitField($field)
-    {
-
-        $parts = explode('.',$field);
-
-        return array(trim($parts[0]),trim($parts[1]));
 
 
     }
