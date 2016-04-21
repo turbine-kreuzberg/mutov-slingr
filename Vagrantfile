@@ -6,7 +6,7 @@ VM_MEMORY="4096"
 VM_IP="33.33.33.77"
 VM_NAME="mutov-slingr"
 VM_HOSTNAME="mutov-slingr.votum-local.de"
-VM_ALIASES="api.mutov-slingr.votum-local.de gui.mutov-slingr.votum-local.de"
+VM_ALIASES="api.mutov-slingr.votum-local.de gui.mutov-slingr.votum-local.de magento.mutov-slingr.votum-local.de"
 PATH_APP="/var/www/mutov-slingr"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure

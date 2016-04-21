@@ -2,39 +2,25 @@
 common:
   packages:
   - sudo
-#  - ansible
-#  - bash-completion
-#  - python-pycurl
   - git
-#  - htop
-#  - tree
-#  - vim
   - nano
   - curl
-#  - zip
   - unzip
-#  - rsync
-#  - wget
-#  - ant
-#  - screen
-#  - mc
-#  - net-tools
 
 apache_listen_port: 80
 apache_vhosts_filename: "mutov-slingr.votum-local.de.conf"
 apache_remove_default_vhost: true
 apache_vhosts:
   - servername: "api.mutov-slingr.votum-local.de"
-    documentroot_base: "/var/www/mutov-slingr"
     documentroot: "/var/www/mutov-slingr/web/api"
   - servername: "gui.mutov-slingr.votum-local.de"
-    documentroot_base: "/var/www/mutov-slingr/app"
     documentroot: "/var/www/mutov-slingr/web"
   - servername: "mutov-slingr.votum-local.de"
-    documentroot_base: "/var/www/mutov-slingr/app"
     documentroot: "/var/www/mutov-slingr/app/web"
+  - servername: "magento.mutov-slingr.votum-local.de"
+    documentroot: "/var/www/magento"
 apache_user: vagrant
-apache_group: vagrant
+apache_group: www-data
 
 mysql_root_password: root
 mysql_databases:
@@ -42,11 +28,14 @@ mysql_databases:
     encoding: utf8
     collation: utf8_general_ci
     dump_file: ansible/environments/dev/slingr.sql.gz
+  - name: magento
+    encoding: utf8
+    collation: utf8_general_ci
 mysql_users:
   - name: slingr
     host: "%"
     password: slingr
-    priv: "slingr.*:ALL"
+    priv: "*.*:ALL"
 mysql_packages:
   - mariadb-server
 mysql_daemon: mysql
@@ -69,13 +58,10 @@ php_packages:
   - php5-common
   - php5-curl
   - php5-dev
-#  - php5-fpm
   - php5-gd
-#  - php5-mbstring
   - php5-mysql
   - php5-xdebug
   - php-apc
-#  - php5-xml
 
 project_root: "{{ apache_vhosts[0].documentroot }}"
 
@@ -83,6 +69,36 @@ project_root: "{{ apache_vhosts[0].documentroot }}"
 composer_github_oauth_token: 'd4faa577b24e168bffc74bb7dd50600edd563db1'
 composer_home_owner: vagrant
 composer_home_group: vagrant
+
+magento_version: "1.9.2.4"
+magento_download_host: "https://github.com/OpenMage/magento-mirror/archive/{{ magento_version }}"
+magento_download_package: "magento-{{ magento_version }}.zip"
+magento_install_tmp_dir_sub: "magento-mirror-{{ magento_version }}"
+magento_webuser: 'vagrant'
+magento_config:
+   license_agreement_accepted: "yes"
+   locale: "de_DE"
+   timezone: "Europe/Berlin"
+   default_currency: "EUR"
+   db_host: "localhost"
+   db_name: "magento"
+   db_user: "{{ mysql_users.0.name }}"
+   db_pass: "{{ mysql_users.0.password }}"
+   url: "http://magento.mutov-slingr.votum-local.de/"
+   use_rewrites: "yes"
+   use_secure: "yes"
+   secure_base_url: "http://magento.mutov-slingr.votum-local.de/"
+   use_secure_admin: "yes"
+   admin_firstname: "Magento"
+   admin_lastname: "Admin"
+   admin_email: "bernd.alter@bvotum.de"
+   admin_username: "admin"
+   admin_password: "magento123"
+   skip_url_validation: "no"
+magento_modman_extensions_git:
+  - repo: https://github.com/avstudnitz/AvS_FastSimpleImport
+    name: "AvS_FastSimpleImport"
+    dest: /var/www/magento-extensions
 
 prepare:
   settings_target: "/var/www/mutov-slingr/web"

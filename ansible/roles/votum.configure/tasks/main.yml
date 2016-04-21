@@ -22,3 +22,17 @@
     dest: /etc/hosts
     line: '127.0.0.1 {{ item.servername }}'
   with_items: '{{ apache_vhosts }}'
+
+- name: prepare | adjust permissions
+  file:
+    path: /var/www
+    owner: '{{ apache_user }}'
+    group: '{{ apache_group }}'
+    mode: 'g+rwX'
+    recurse: yes
+
+- name: configure | add vagrant user to apache group
+  user:
+    name: vagrant
+    groups: '{{ apache_group }}'
+    append: yes
