@@ -7,7 +7,7 @@ namespace MutovSlingr\Views;
  *
  * @package MutovSlingr\Views
  */
-class ViewJson
+class ViewJson extends View
 {
     /**
      * @param array|string $content
@@ -25,6 +25,6 @@ class ViewJson
      */
     public function getContentType()
     {
-        return 'application/json';
+        return self::CONTENT_TYPE_JSON;
     }
 }
