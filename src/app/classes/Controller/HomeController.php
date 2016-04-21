@@ -1,6 +1,7 @@
 <?php
 
 namespace MutovSlingr\Controller;
+use GuzzleHttp\Client;
 use Ospinto\dBug;
 
 use Slim\Http\Request;
@@ -112,21 +113,10 @@ class HomeController
      */
     protected function apiCall($json)
     {
-        //open connection
-        $ch = curl_init();
+        $client = new Client();
 
-        //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, self::_API_END_POINT);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-
-        //execute post
-        $result = curl_exec($ch);
-        //close connection
-        curl_close($ch);
-
-        return $result;
+        $process_result = $client->post(self::_API_END_POINT, ['json' => json_decode($json, true)]);
+        return $process_result->getBody();
     }
 
 
