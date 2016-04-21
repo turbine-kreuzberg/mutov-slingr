@@ -6,7 +6,8 @@ use Symfony\Component\Yaml\Parser;
 // Default Configurations, Config.yml will be merged over it
 $configDefaults = array(
   'api_host' => 'http://api.mutov-slingr.votum-local.de/process.php?request=data',
-   'template_folder' => '/var/www/mutov-slingr/app/var',
+  'template_folder' => '/var/www/mutov-slingr/app/var',
+   'theme_folder' => '/var/www/mutov-slingr/app/themes',
 );
 
 // Get Config.yml

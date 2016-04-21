@@ -5,6 +5,7 @@ namespace MutovSlingr\Config;
 
 use Interop\Container\ContainerInterface;
 use MutovSlingr\Controller\SlingrController;
+use MutovSlingr\Controller\FrontController;
 use MutovSlingr\Loader\TemplateLoader;
 use MutovSlingr\Model\Api;
 use MutovSlingr\Processor\TemplateProcessor;
@@ -17,8 +18,6 @@ class Container
      */
     public function __construct( ContainerInterface $container )
     {
-
-
 
         $container[TemplateProcessor::class] = function ( \Slim\Container $container ) {
             $class = new TemplateProcessor($container->get( Api::class ));
@@ -50,6 +49,15 @@ class Container
 
             $class->setProcessor( $container->get( TemplateProcessor::class ) );
             $class->setTemplateLoader( $container->get( TemplateLoader::class) );
+            $class->setConfig( $container->get( 'settings' ) );
+
+            return $class;
+        };
+
+
+        $container[FrontController::class] = function ( \Slim\Container $container ) {
+            $class = new FrontController();
+
             $class->setConfig( $container->get( 'settings' ) );
 
             return $class;

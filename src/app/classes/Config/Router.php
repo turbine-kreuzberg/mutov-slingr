@@ -5,6 +5,7 @@ namespace MutovSlingr\Config;
 
 use MutovSlingr\Controller\ErrorController;
 use MutovSlingr\Controller\SlingrController;
+use MutovSlingr\Controller\FrontController;
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -34,7 +35,7 @@ class Router
         $this->app->get( '/process', 'MutovSlingr\Controller\HomeController:processAction' );
 
         // Slingr route
-        $this->app->get( '/slingr/{action}[/{template}]',
+        $this->app->any( '/slingr/{action}[/{template}]',
           function ( Request $request, Response $response, $args ) {
 
               // Controller
@@ -46,12 +47,33 @@ class Router
               }
 
               // Call action
-              $content = $controller->{$args['action'].'Action'}( $args );
+              $content = $controller->{$args['action'].'Action'}( $args, $request );
 
               // Return Response Object
               return $response->write( $content )->withHeader( 'Content-Type',
                 $controller->getView()->getContentType() );
           } );
+
+
+        // Front route
+        $this->app->get( '/front/{action}[/{template}]',
+            function ( Request $request, Response $response, $args ) {
+
+                // Controller
+                $controller = $this->get( FrontController::class );
+
+                // Action missing
+                if (!method_exists( $controller, $args['action'].'Action' )) {
+                    throw new \Exception( 'Action '.$args['action'].' does not exist.' );
+                }
+
+                // Call action
+                $content = $controller->{$args['action'].'Action'}( $args );
+
+                // Return Response Object
+                return $response->write( $content )->withHeader( 'Content-Type',
+                    $controller->getView()->getContentType() );
+            } );
 
     }
 
