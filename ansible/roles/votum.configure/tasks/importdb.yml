@@ -1,0 +1,17 @@
+- name: check for existing tables
+  shell: 'mysql -u root -p{{ mysql_root_password }} -e "show tables from {{ item.name }}"'
+  register: mysql_tables_exist
+  with_items: '{{ mysql_databases }}'
+  ignore_errors: True
+
+- name: Import dumps
+  mysql_db:
+    name: '{{ item.0.name }}'
+    state: import
+    login_user: root
+    login_password: '{{ mysql_root_password }}'
+    target: '/vagrant/{{ item.0.dump_file }}'
+  with_together:
+    - '{{ mysql_databases }}'
+    - '{{ mysql_tables_exist.results }}'
+  when: item.0.dump_file is defined and item.1.rc == 0 and item.1.stdout == ""

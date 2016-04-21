@@ -12,5 +12,5 @@
     - { role: geerlingguy.apache, become_user: root }
     - { role: geerlingguy.mysql, become_user: root }
     - { role: geerlingguy.php, become_user: root }
-    - { role: votum.php, become_user: root }
     - { role: geerlingguy.composer, become_user: root }
+    - { role: votum.configure, become_user: root }

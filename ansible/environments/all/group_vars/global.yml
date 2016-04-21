@@ -12,7 +12,7 @@ common:
   - nano
   - curl
 #  - zip
-#  - unzip
+  - unzip
 #  - rsync
 #  - wget
 #  - ant
@@ -26,7 +26,10 @@ apache_remove_default_vhost: true
 apache_vhosts:
   - servername: "api.mutov-slingr.votum-local.de"
     documentroot_base: "/var/www/mutov-slingr"
-    documentroot: "/var/www/mutov-slingr/web"
+    documentroot: "/var/www/mutov-slingr/web/api"
+  - servername: "gui.mutov-slingr.votum-local.de"
+    documentroot_base: "/var/www/mutov-slingr/app"
+    documentroot: "/var/www/mutov-slingr/app/web"
   - servername: "mutov-slingr.votum-local.de"
     documentroot_base: "/var/www/mutov-slingr/app"
     documentroot: "/var/www/mutov-slingr/app/web"
@@ -38,6 +41,7 @@ mysql_databases:
   - name: slingr
     encoding: utf8
     collation: utf8_general_ci
+    dump_file: ansible/environments/dev/slingr.sql.gz
 mysql_users:
   - name: slingr
     host: "%"
@@ -79,3 +83,8 @@ project_root: "{{ apache_vhosts[0].documentroot }}"
 composer_github_oauth_token: 'd4faa577b24e168bffc74bb7dd50600edd563db1'
 composer_home_owner: vagrant
 composer_home_group: vagrant
+
+prepare:
+  settings_target: "/var/www/mutov-slingr/web"
+  run_composer_install_in:
+    - "/var/www/mutov-slingr"

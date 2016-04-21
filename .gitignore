@@ -5,4 +5,5 @@
 /src/web/plugins
 /src/web/resources
 /ansible/roles/geerlingguy.*
+/ansible/roles/cascaya.*
 _git_backup

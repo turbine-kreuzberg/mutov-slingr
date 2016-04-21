@@ -1,0 +1,24 @@
+---
+- name: configure | set up xdebug
+  include: xdebug.yml
+  when: php_packages is defined and 'php5-xdebug' in php_packages
+
+- name: configure | run composer
+  command: composer install chdir='{{ item }}'
+  with_items: '{{ prepare.run_composer_install_in }}'
+  when: prepare.run_composer_install_in is defined and prepare.run_composer_install_in|length > 0
+
+- name: configure | copy api configuration
+  template:
+    src: settings.php
+    dest: '{{ prepare.settings_target }}/settings.php'
+    force: no
+
+- include: importdb.yml
+  when: env == 'dev' and mysql_databases is defined and mysql_databases|length > 0
+
+- name: prepare | add vhost domains to hostfile on guest
+  lineinfile:
+    dest: /etc/hosts
+    line: '127.0.0.1 {{ item.servername }}'
+  with_items: '{{ apache_vhosts }}'

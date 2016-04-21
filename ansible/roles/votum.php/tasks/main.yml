@@ -1,4 +1,0 @@
----
-- name: common | set up xdebug
-  include: xdebug.yml
-  when: php_packages is defined and 'php5-xdebug' in php_packages
