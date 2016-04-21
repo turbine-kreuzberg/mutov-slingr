@@ -39,6 +39,7 @@ class Container
             $class = new SlingrController();
 
             $class->setProcessor( $container->get( TemplateProcessor::class ) );
+            $class->setConfig( $container->get( 'settings' ) );
 
             return $class;
         };

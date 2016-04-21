@@ -24,7 +24,12 @@ class SlingrController extends Controller
     /**
      * @var TemplateProcessor
      */
-    private $processor;
+    protected $processor;
+
+    /**
+     * @var array
+     */
+    protected $config;
 
     /**
      *
@@ -42,6 +47,14 @@ class SlingrController extends Controller
     public function setProcessor( $processor )
     {
         $this->processor = $processor;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function setConfig( $config )
+    {
+        $this->config = $config;
     }
 
 }
