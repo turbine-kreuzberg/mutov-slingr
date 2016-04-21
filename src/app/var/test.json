@@ -12,7 +12,7 @@
             "title": "id",
             "settings": {
               "incrementStart": 1,
-              "incrementValue": 1
+              "incrementValue": 2
             }
           },
           {
@@ -74,9 +74,8 @@
     }
   ],
   "relations":[
-    {"product.category_id": {"from":"product.id","to":"category.id"}},
-    {"order.customer_id": {"from":"customer.id","to":"order.id"}},
-    {"order.product_id": {"from":"product.id","to":"order.id"}}
+    {"field":"product.category_id", "entity":"category.id","qnt":4}
+
   ]
 }
 
