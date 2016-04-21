@@ -21,7 +21,10 @@ class Container
 
 
         $container[TemplateProcessor::class] = function ( \Slim\Container $container ) {
-            $class = new TemplateProcessor($container->get( Api::class ));
+            $class = new TemplateProcessor(
+                $container->get( Api::class ),
+                $container->get('settings')
+            );
 
             return $class;
         };

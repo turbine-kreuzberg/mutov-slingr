@@ -8,8 +8,8 @@
 
 namespace MutovSlingr\Processor;
 use MutovSlingr\Model\Api;
-use MutovSlingr\Pickers\RandomPicker;
 use Ospinto\dBug;
+use Slim\Interfaces\CollectionInterface;
 
 
 class TemplateProcessor
@@ -23,24 +23,40 @@ class TemplateProcessor
     protected $api = NULL;
 
     /**
+     * @var CollectionInterface
+     */
+    private $config;
+
+    /**
      * TemplateProcessor constructor.
      * @param Api $api
+     * @param CollectionInterface $config
      */
-    public function __construct(Api $api)
+    public function __construct(Api $api, CollectionInterface $config)
     {
-       $this->api = $api;
+        $this->config = $config;
+        $this->api = $api;
     }
 
 
-
-
+    /**
+     * @param string $templatesContent
+     *
+     * @return array
+     */
     protected function generateFlatData($templatesContent)
     {
         $entitiesList = array();
+
         foreach($templatesContent as $template){
 
             $label = $template['label'];
-            $definition = json_encode($template['definition']);
+            $templateDefinition = $template['definition'];
+
+            $templateDefinition = array_merge($templateDefinition, $this->config->get('data_generator_export_configuration'));
+
+            $definition = json_encode($templateDefinition);
+
             $entitiesList[$label] = json_decode($this->api->apiCall($definition),true);
         }
 
@@ -48,8 +64,10 @@ class TemplateProcessor
 
     }
 
-
-
+    /**
+     * @param string $template
+     * @return array|null
+     */
     public function processTemplate($template)
     {
 
