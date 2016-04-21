@@ -10,13 +10,17 @@
 
 namespace MutovSlingr\Views;
 
-
 abstract class View
 {
-    const CONTENT_TYPE_JSON = 'application/json';
+    const CONTENT_TYPE = 'text/plain';
 
-    const CONTENT_TYPE_TEXT_PLAIN = 'text/plain';
-
-    const CONTENT_TYPE_TEXT_HTML = 'text/html';
-
+    /**
+     * The content type
+     *
+     * @return string
+     */
+    public function getContentType()
+    {
+        return self::CONTENT_TYPE;
+    }
 }

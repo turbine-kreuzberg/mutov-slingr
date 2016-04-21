@@ -3,7 +3,7 @@
     {
       "label": "product",
       "definition": {
-        "numRows": 10000,
+        "numRows": 1000,
         "countries": [
           "de_DE"
         ],
@@ -115,6 +115,14 @@
               "rangeMin": 0,
               "rangeMax": 30
             }
+          },
+          {
+            "type": "Constant",
+            "title": "is_in_stock",
+            "settings": {
+              "loopCount": 1,
+              "values": "1"
+            }
           }
         ],
         "export": {
@@ -129,7 +137,7 @@
     {
       "label": "category",
       "definition": {
-        "numRows": 150,
+        "numRows": 50,
         "countries": [
           "de_DE"
         ],

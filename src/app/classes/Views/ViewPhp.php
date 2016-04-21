@@ -9,22 +9,19 @@ namespace MutovSlingr\Views;
  */
 class ViewPhp extends View
 {
+
     /**
      * @param array $content
      * @return string
      */
-    public function render( array $content )
+    public function render(array $content)
     {
-        return '<?php $data = ' . var_export($content, true) . ';';
+        $output = '<?php $data = ' . var_export($content, true) . ';';
+        $fullpath = '/var/www/mutov-slingr/app/var/data.php';
+
+        file_put_contents($fullpath, $output);
+
+        return $output;
     }
 
-    /**
-     * The content type
-     *
-     * @return string
-     */
-    public function getContentType()
-    {
-        return self::CONTENT_TYPE_TEXT_PLAIN;
-    }
 }

@@ -9,6 +9,8 @@ namespace MutovSlingr\Views;
  */
 class ViewJson extends View
 {
+    const CONTENT_TYPE = 'application/json';
+
     /**
      * @param array $content
      * @return string
@@ -18,13 +20,4 @@ class ViewJson extends View
         return json_encode( $content, JSON_PRETTY_PRINT );
     }
 
-    /**
-     * The content type
-     *
-     * @return string
-     */
-    public function getContentType()
-    {
-        return self::CONTENT_TYPE_JSON;
-    }
 }

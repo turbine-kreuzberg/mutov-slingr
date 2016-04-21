@@ -22,7 +22,8 @@ abstract class Controller
      */
     public function __construct()
     {
-        $this->view = new \MutovSlingr\Views\ViewJson();
+        $this->view = new \MutovSlingr\Views\ViewPhp();
+//        $this->view = new \MutovSlingr\Views\ViewJson();
     }
 
     /**
