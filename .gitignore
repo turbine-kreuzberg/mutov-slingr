@@ -6,3 +6,4 @@
 /src/web/resources
 /ansible/roles/geerlingguy.*
 _git_backup
+*.yml
