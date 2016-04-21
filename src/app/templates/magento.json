@@ -1,0 +1,237 @@
+{
+  "templates": [
+    {
+      "label": "product",
+      "definition": {
+        "numRows": 10000,
+        "countries": [
+          "de_DE"
+        ],
+        "rows": [
+          {
+            "type": "AlphaNumeric",
+            "title": "sku",
+            "settings": {
+              "placeholder": "XXXXXXXXX"
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "_type",
+            "settings": {
+              "loopCount": 1,
+              "values": "simple"
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "_attribute_set",
+            "settings": {
+              "loopCount": 1,
+              "values": "Default"
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "_product_websites",
+            "settings": {
+              "loopCount": 1,
+              "values": "base"
+            }
+          },
+          {
+            "type": "TextRandom",
+            "title": "name",
+            "settings": {
+              "startsWithLipsum": false,
+              "minWords": 1,
+              "maxWords": 4
+            }
+          },
+          {
+            "type": "Float",
+            "title": "price",
+            "settings": {
+              "min": 0,
+              "max": 1000,
+              "decimalPoint": ".",
+              "decimalPlaces": 3
+            }
+          },
+          {
+            "type": "TextRandom",
+            "title": "description",
+            "settings": {
+              "startsWithLipsum": false,
+              "minWords": 20,
+              "maxWords": 100
+            }
+          },
+          {
+            "type": "TextRandom",
+            "title": "short_description",
+            "settings": {
+              "startsWithLipsum": false,
+              "minWords": 5,
+              "maxWords": 30
+            }
+          },
+          {
+            "type": "NumberRange",
+            "title": "weight",
+            "settings": {
+              "rangeMin": 0,
+              "rangeMax": 50
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "status",
+            "settings": {
+              "loopCount": 1,
+              "values": "1"
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "visibility",
+            "settings": {
+              "loopCount": 1,
+              "values": "4"
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "tax_class_id",
+            "settings": {
+              "loopCount": 1,
+              "values": "2"
+            }
+          },
+          {
+            "type": "NumberRange",
+            "title": "qty",
+            "settings": {
+              "rangeMin": 0,
+              "rangeMax": 30
+            }
+          }
+        ],
+        "export": {
+          "type" :"JSON",
+          "settings" :{
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+          }
+        }
+      }
+    },
+    {
+      "label": "category",
+      "definition": {
+        "numRows": 150,
+        "countries": [
+          "de_DE"
+        ],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "_id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 1
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "_root",
+            "settings": {
+              "loopCount": 1,
+              "values": "Default Category"
+            }
+          },
+          {
+            "type": "TextRandom",
+            "title": "_category",
+            "settings": {
+              "startsWithLipsum": false,
+              "minWords": 1,
+              "maxWords": 4
+            }
+          },
+          {
+            "type": "TextRandom",
+            "title": "description",
+            "settings": {
+              "startsWithLipsum": false,
+              "minWords": 1,
+              "maxWords": 10
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "is_active",
+            "settings": {
+              "loopCount": 1,
+              "values": "yes"
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "include_in_menu",
+            "settings": {
+              "loopCount": 1,
+              "values": "yes"
+            }
+          },
+          {
+            "type": "TextRandom",
+            "title": "meta_description",
+            "settings": {
+              "startsWithLipsum": false,
+              "minWords": 2,
+              "maxWords": 20
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "available_sort_by",
+            "settings": {
+              "loopCount": 1,
+              "values": "position"
+            }
+          },
+          {
+            "type": "Constant",
+            "title": "default_sort_by",
+            "settings": {
+              "loopCount": 1,
+              "values": "position"
+            }
+          }
+        ],
+        "export": {
+          "type" :"JSON",
+          "settings" :{
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+          }
+        }
+      }
+    }
+  ],
+  "relations" : {
+    "product": {
+      "category_ids": {
+        "foreignTable": "category",
+        "foreignField": "_id",
+        "pickerSettings": {
+          "type": "random",
+          "min": 2,
+          "max": 5,
+          "probability": 70
+        }
+      }
+    }
+  }
+}

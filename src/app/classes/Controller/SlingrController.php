@@ -46,8 +46,13 @@ class SlingrController extends Controller
      */
     public function generateAction( array $args = array(), $request )
     {
+        $templateFileName = 'test.json';
 
-        $template = $this->templateLoader->loadTemplate('test.json');
+        if (is_array($args) && isset($args['template']) && is_string($args['template'])) {
+            $templateFileName = $args['template'];
+        }
+
+        $template = $this->templateLoader->loadTemplate($templateFileName);
         $result = $this->processor->processTemplate($template);
 
         return $this->view->render( array( 'result' => $result ) );
@@ -68,7 +73,7 @@ class SlingrController extends Controller
     /**
      * @param TemplateProcessor $processor
      */
-    public function setProcessor( $processor )
+    public function setProcessor($processor)
     {
         $this->processor = $processor;
     }
@@ -76,7 +81,7 @@ class SlingrController extends Controller
     /**
      * @param CollectionInterface $config
      */
-    public function setConfig(CollectionInterface $config )
+    public function setConfig(CollectionInterface $config)
     {
         $this->config = $config;
     }
