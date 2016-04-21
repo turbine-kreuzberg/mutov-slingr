@@ -15,35 +15,33 @@ use Ospinto\dBug;
 class TemplateProcessor
 {
 
-
-    const _TEMPLATES_FOLDER = '/var/www/mutov-slingr/app/var'; // NEED to be changed
-
     protected $flatData = NULL;
 
+    /**
+     * @var Api $api
+     */
+    protected $api = NULL;
 
-    protected function getTemplate($templateFileName)
+    /**
+     * TemplateProcessor constructor.
+     * @param Api $api
+     */
+    public function __construct(Api $api)
     {
-
-        $fullPath = self::_TEMPLATES_FOLDER.'/'.$templateFileName;
-        $contents = file_get_contents($fullPath);
-
-        $contents = json_decode($contents, true);
-
-        return $contents;
-
+       $this->api = $api;
     }
+
+
+
 
     protected function generateFlatData($templatesContent)
     {
-
-        $apiCall = new Api();
-
         $entitiesList = array();
         foreach($templatesContent as $template){
 
             $label = $template['label'];
             $definition = json_encode($template['definition']);
-            $entitiesList[$label] = json_decode($apiCall->apiCall($definition),true);
+            $entitiesList[$label] = json_decode($this->api->apiCall($definition),true);
         }
 
         return $entitiesList;
@@ -52,24 +50,22 @@ class TemplateProcessor
 
 
 
-    public function processTemplate($templateFileName)
+    public function processTemplate($template)
     {
 
-        $templateContent = $this->getTemplate($templateFileName);
-
-        echo('<h1>Template content</h1>');
-        new dbug($templateContent);
+        //echo('<h1>Template content</h1>');
+        //new dbug($templateContent);
 
         //exit;
 
-        $this->flatData = $this->generateFlatData($templateContent['templates']);
+        $this->flatData = $this->generateFlatData($template['templates']);
 
-        echo('<h1>Original data</h1>');
-        new dBug($this->flatData);
+        //echo('<h1>Original data</h1>');
+        //new dBug($this->flatData);
 
 
 
-        foreach($templateContent['relations'] as $tableTo=>$relation)
+        foreach($template['relations'] as $tableTo=>$relation)
         {
 
             //new dBug($tableTo);
@@ -93,15 +89,15 @@ class TemplateProcessor
 
             }
 
-            echo('<h1>Result array</h1>');
-            new dbug($this->flatData);
+            //echo('<h1>Result array</h1>');
+            //new dbug($this->flatData);
 
 
 
 
         }
 
-
+        return $this->flatData;
         // process relations
 
 

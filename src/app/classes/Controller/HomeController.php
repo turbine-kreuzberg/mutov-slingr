@@ -71,17 +71,6 @@ class HomeController extends \MutovSlingr\Core\Controller
     }
 
 
-    /**
-     * Process the json template and generate the demo data
-     * @param $request
-     * @param $response
-     * @param $args
-     */
-    public function processAction($request, $response, $args)
-    {
-        $templateProcessor = new TemplateProcessor();
-        return $templateProcessor->processTemplate('test.json');
-    }
 
 
 }

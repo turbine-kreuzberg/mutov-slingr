@@ -9,6 +9,7 @@
 namespace MutovSlingr\Controller;
 
 use MutovSlingr\Core\Controller;
+use MutovSlingr\Loader\TemplateLoader;
 use MutovSlingr\Processor\TemplateProcessor;
 
 /**
@@ -32,13 +33,22 @@ class SlingrController extends Controller
     protected $config;
 
     /**
+     * @var TemplateLoader
+     */
+    private $templateLoader;
+
+    /**
      *
      * @param array $args
      * @return string
      */
     public function generateAction( array $args = array() )
     {
-        return $this->view->render( array( 'test' => 'content' ) );
+
+        $template = $this->templateLoader->loadTemplate('test.json');
+        $result = $this->processor->processTemplate($template);
+
+        return $this->view->render( array( 'result' => $result ) );
     }
 
     /**
@@ -55,6 +65,14 @@ class SlingrController extends Controller
     public function setConfig( $config )
     {
         $this->config = $config;
+    }
+
+    /**
+     * @param TemplateLoader $templateLoader
+     */
+    public function setTemplateLoader(TemplateLoader $templateLoader)
+    {
+        $this->templateLoader = $templateLoader;
     }
 
 }

@@ -13,7 +13,20 @@ use GuzzleHttp\Client;
 class Api
 {
 
-    const _API_END_POINT = 'http://api.mutov-slingr.votum-local.de/api/v1/data';
+    /**
+     * @var array
+     */
+    private $config;
+
+    /**
+     * Api constructor.
+     * @param array $config
+     */
+    public function __construct($config)
+    {
+
+        $this->config = $config;
+    }
 
     /**
      * @param string $json
@@ -21,10 +34,9 @@ class Api
      */
     public function apiCall($json)
     {
-        print_r($json);
         $client = new Client();
         $process_result = $client->post(
-          self::_API_END_POINT,
+            $this->config['api']['host'],
           ['json' => json_decode($json, true)]
         );
 

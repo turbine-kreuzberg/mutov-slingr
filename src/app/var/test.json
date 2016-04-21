@@ -80,7 +80,7 @@
           "foreignField": "id",
           "pickerSettings": {
             "type": "random",
-            "min": 1,
+            "min": 2,
             "max": 5,
             "probability": 70
           }
