@@ -17,8 +17,9 @@ cd mutov-slingr
 vagrant up
 ```
 
-:exclamation: Make sure you clone the repository recursively because the generatedata tool (see below) is included as a submodule.
-Just in case you did only a regular clone, run the following command to checkout the submodule as well.
+**IMPORTANT:  
+Make sure you clone the repository recursively because the generatedata tool (see below) is included as a submodule.
+Just in case you did only a regular clone, run the following command to checkout the submodule as well.**
 ```bash
 cd mutov-slingr
 git submodule update --init --recursive
