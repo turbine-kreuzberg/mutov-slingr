@@ -7,3 +7,4 @@
 /ansible/roles/geerlingguy.*
 /ansible/roles/cascaya.*
 _git_backup
+*.yml

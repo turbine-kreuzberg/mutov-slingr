@@ -43,8 +43,8 @@
     {
       "label": "product",
       "definition": {
-        "numRows": 100,
-        "gdNumRowsToGenerate": 100,
+        "numRows": 50,
+        "gdNumRowsToGenerate": 50,
         "countries": [],
         "rows": [
           {
@@ -73,9 +73,19 @@
       }
     }
   ],
-  "relations":[
-    {"field":"product.category_id", "entity":"category.id","qnt":4}
-
-  ]
+  "relations" : {
+    "product": {
+        "category_id": {
+          "foreignTable": "category",
+          "foreignField": "id",
+          "pickerSettings": {
+            "type": "random",
+            "min": 1,
+            "max": 5,
+            "probability": 70
+          }
+        }
+    }
+    }
 }
 

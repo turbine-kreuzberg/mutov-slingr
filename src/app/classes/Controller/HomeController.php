@@ -9,11 +9,8 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 
-class HomeController
+class HomeController extends \MutovSlingr\Core\Controller
 {
-
-
-
 
     /**
      * @param Request $request
@@ -82,9 +79,8 @@ class HomeController
      */
     public function processAction($request, $response, $args)
     {
-
         $templateProcessor = new TemplateProcessor();
-        $templateProcessor->processTemplate('test.json');
+        return $templateProcessor->processTemplate('test.json');
     }
 
 
