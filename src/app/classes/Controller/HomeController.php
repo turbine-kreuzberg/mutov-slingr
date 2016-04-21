@@ -82,7 +82,6 @@ class HomeController
      */
     public function processAction($request, $response, $args)
     {
-
         $templateProcessor = new TemplateProcessor();
         $templateProcessor->processTemplate('test.json');
     }
