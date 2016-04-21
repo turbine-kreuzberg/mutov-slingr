@@ -83,18 +83,13 @@ class TemplateProcessor
                 $foreignTable = $relationData['foreignTable'];
                 $foreignField = $relationData['foreignField'];
                 $pickerSettings = $relationData['pickerSettings'];
-                $quantity = $pickerSettings['max'];
-                //$pickerClass = 'MutovSlingr\\Pickers\\'.ucfirst($pickerSettings['type']).'Picker';
+                $pickerClass = 'MutovSlingr\\Pickers\\'.ucfirst($pickerSettings['type']).'Picker';
 
 
-                //$picker = new $pickerClass($pickerSettings);
+                $pickerInstance = new $pickerClass($pickerSettings);
                 //$picker = new RandomPicker($pickerSettings);
 
-                //new dbug($picker); exit;
-
-                $this->addElement($tableTo, $columnTo, $foreignTable, $foreignField, 'random', $quantity);
-
-
+                $this->addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance);
 
             }
 
@@ -114,12 +109,12 @@ class TemplateProcessor
     }
 
 
-    protected function addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickType, $quantity)
+    protected function addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance)
     {
 
         foreach($this->flatData[$tableTo] as $idx=>$item){
 
-            $values = $this->pickValues($foreignTable, $foreignField, $pickType, $quantity);
+            $values = $pickerInstance->pickValues($this->flatData[$foreignTable], $foreignField);
 
             $this->flatData[$tableTo][$idx][$columnTo] = implode(',',$values);
 
@@ -129,22 +124,6 @@ class TemplateProcessor
 
 
     }
-
-
-
-    protected function pickValues($foreignTable, $foreignField, $pickType = 'random', $quantity)
-    {
-        $columnList = array();
-        $list = array_rand($this->flatData[$foreignTable], $quantity);
-
-        foreach($list as $item){
-            $columnList[] = $this->flatData[$foreignTable][$item][$foreignField];
-        }
-
-        return $columnList;
-    }
-
-
 
 
 

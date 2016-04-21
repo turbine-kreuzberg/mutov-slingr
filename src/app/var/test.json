@@ -81,7 +81,7 @@
           "pickerSettings": {
             "type": "random",
             "min": 1,
-            "max": 2,
+            "max": 5,
             "probability": 70
           }
         }

@@ -28,18 +28,27 @@ class RandomPicker
     public function __construct($settings)
     {
 
-        $this->min = $settings['min'];
-        $this->max = $settings['max'];
+        $this->min = (int)$settings['min'];
+        $this->max = (int)$settings['max'];
         $this->probability = $settings['probability'];
 
     }
 
 
-    public function pickValues()
+    public function pickValues($foreignTable, $foreignField)
     {
 
+        $columnList = array();
 
+        if(rand(1,100) > $this->probability) return $columnList;
 
+        $list = array_rand($foreignTable, rand($this->min,$this->max));
+
+        foreach($list as $item){
+            $columnList[] = $foreignTable[$item][$foreignField];
+        }
+
+        return $columnList;
 
     }
 
