@@ -29,7 +29,7 @@ apache_vhosts:
     documentroot: "/var/www/mutov-slingr/web/api"
   - servername: "gui.mutov-slingr.votum-local.de"
     documentroot_base: "/var/www/mutov-slingr/app"
-    documentroot: "/var/www/mutov-slingr/app/web"
+    documentroot: "/var/www/mutov-slingr/web"
   - servername: "mutov-slingr.votum-local.de"
     documentroot_base: "/var/www/mutov-slingr/app"
     documentroot: "/var/www/mutov-slingr/app/web"
