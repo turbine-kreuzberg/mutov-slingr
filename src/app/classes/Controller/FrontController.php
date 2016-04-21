@@ -46,15 +46,37 @@ class FrontController extends Controller
      * @param array $args
      * @return string
      */
-    public function indexAction( array $args = array())
+    public function indexAction($request, $response, $args  )
     {
+
+        $templateFiles = array();
+        $fileList = scandir('/var/www/mutov-slingr/app/var/processor-templates');
+
+        foreach($fileList as $file){
+            if($file == '.' || $file == '..') continue;
+
+            $templateFiles[] = $file;
+
+        }
+
+
+
+
+
         return $this->view->render('base.phtml',
-            array( 'result' => 'hello world' ));
+            array( 'templateList' => $templateFiles));
     }
 
 
 
+    public function templatesAction($request, $response, $args  )
+    {
 
+        $jsonFile = $_GET['templateName'];
+
+        $jsonContent = file_get_contents('/var/www/mutov-slingr/app/var/processor-templates/'.$jsonFile);
+        return $jsonContent;
+    }
 
 
 

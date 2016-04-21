@@ -68,7 +68,7 @@ class Router
                 }
 
                 // Call action
-                $content = $controller->{$args['action'].'Action'}( $args );
+                $content = $controller->{$args['action'].'Action'}($request, $response, $args  );
 
                 // Return Response Object
                 return $response->write( $content )->withHeader( 'Content-Type',
