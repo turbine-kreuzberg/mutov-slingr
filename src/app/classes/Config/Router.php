@@ -7,6 +7,7 @@ use MutovSlingr\Controller\ErrorController;
 use MutovSlingr\Controller\SlingrController;
 use MutovSlingr\Controller\FrontController;
 use Slim\App;
+use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -26,14 +27,11 @@ class Router
         $this->app = $app;
         $router = $this;
 
+        // Error handling
         $this->errorHandling();
 
+        // Homepage route
         $this->app->get('/', 'MutovSlingr\Controller\HomeController:indexAction');
-
-        $this->app->get('/test', 'MutovSlingr\Controller\HomeController:testAction');
-
-        $this->app->get('/process', 'MutovSlingr\Controller\HomeController:processAction');
-
 
         // Slingr routes
         $this->app->any( '/slingr/onfly[/{outputFormat}]',
@@ -50,9 +48,9 @@ class Router
                     $controller->getView()->getContentType() );
             } );
 
-        
+
         // Slingr route
-        $this->app->any( '/slingr/{action}[/{template}[/{outputFormat}]]',
+        $this->app->any( '/slingr/{action}[/{template}[/{outputFormat}[/{download}]]]',
           function ( Request $request, Response $response, $args ) use($router) {
 
                 /** @var SlingrController $controller */
@@ -68,13 +66,12 @@ class Router
 
               // Return Response Object
               $response->write( $content );
-
               return $router->responseWithHeaders( $response, $controller->getView()->getHeaders() );
           } );
 
         // Front route
         $this->app->get( '/front/{action}[/{template}]',
-            function ( Request $request, Response $response, $args ) {
+            function ( Request $request, Response $response, $args ) use($router) {
 
                 // Controller
                 $controller = $this->get( FrontController::class );
@@ -88,7 +85,8 @@ class Router
                 $content = $controller->{$args['action'].'Action'}($request, $response, $args  );
 
                 // Return Response Object
-                return $response->write( $content )->withHeader( 'Content-Type', $controller->getView()->getContentType() );
+                $response->write( $content );
+                return $router->responseWithHeaders( $response, $controller->getView('html')->getHeaders() );
             } );
     }
 
@@ -97,42 +95,46 @@ class Router
      */
     protected function errorHandling()
     {
+        $router = $this;
+
         error_reporting(E_ALL);
         ini_set('display_errors', 'on');
 
         /**
          * Error handling
          *
-         * @param \Slim\Container $c
+         * @param Container $container
          * @return callable
          */
-        $this->app->getContainer()['errorHandler'] = function ($c) {
-            return function ($request, $response, \Exception $exception) use ($c) {
+        $this->app->getContainer()['errorHandler'] = function ( Container $container) use($router)  {
+            return function (Request $request, Response $response, \Exception $exception) use ( $container,$router) {
 
-                $controller = new ErrorController();
+                $controller = $container->get(ErrorController::class);
                 $content = $controller->errorAction($exception);
 
-                return $c['response']->withStatus(500)
-                    ->withHeader('Content-Type', $controller->getView()->getContentType())
-                    ->write($content);
+                $response = $container['response']->withStatus(500)
+                  ->write($content);
+
+                return $router->responseWithHeaders( $response, $controller->getView()->getHeaders() );
             };
         };
 
         /**
          * Page not found handling
          *
-         * @param \Slim\Container $c
+         * @param Container $container
          * @return callable
          */
-        $this->app->getContainer()['notFoundHandler'] = function ($c) {
-            return function ($request, $response) use ($c) {
+        $this->app->getContainer()['notFoundHandler'] = function (Container $container) use($router) {
+            return function (Request $request, Response $response) use ($container,$router) {
 
-                $controller = new ErrorController();
+                $controller = $container->get(ErrorController::class);
                 $content = $controller->notFoundAction();
 
-                return $c['response']->withStatus(404)
-                    ->withHeader('Content-Type', $controller->getView()->getContentType())
-                    ->write($content);
+                $response = $container['response']->withStatus(404)
+                  ->write($content);
+
+                return $router->responseWithHeaders( $response, $controller->getView()->getHeaders() );
             };
         };
     }

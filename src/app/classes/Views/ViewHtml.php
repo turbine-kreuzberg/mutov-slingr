@@ -12,6 +12,10 @@ class ViewHtml extends View
 
     const CONTENT_TYPE = 'text/html';
 
+    protected $headers = array(
+      'Content-Type' => self::CONTENT_TYPE
+    );
+
     /** @var string */
     protected $themeFolder = null;
 
