@@ -9,7 +9,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 
-class HomeController extends \MutovSlingr\Core\Controller
+class HomeController extends \MutovSlingr\Controller\AbstractController
 {
 
     /**
