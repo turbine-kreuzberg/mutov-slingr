@@ -2,6 +2,8 @@
 
 namespace MutovSlingr\Views;
 
+use Ospinto\dBug;
+
 /**
  * Class ViewXml
  *
@@ -21,8 +23,6 @@ class ViewXml extends View
         $xml = new \SimpleXMLElement('<root/>');
         $this->arrayToXml($content, $xml);
 
-
-
         return $xml->asXML();
     }
 
@@ -35,6 +35,7 @@ class ViewXml extends View
     protected function arrayToXml($array, &$xml){
         foreach ($array as $key => $value) {
             if(is_array($value)){
+
                 if(is_int($key)){
                     $key = "element";
                 }
@@ -42,6 +43,9 @@ class ViewXml extends View
                 $this->arrayToXml($value, $label);
             }
             else {
+                if(is_int($key)){
+                    $key = "el";
+                }
                 $xml->addChild($key, $value);
             }
         }
