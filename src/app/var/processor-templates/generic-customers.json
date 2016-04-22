@@ -16,14 +16,14 @@
           },
           {
             "type": "TextFixed",
-            "title": "First Name",
+            "title": "FirstName",
             "settings": {
               "numWords": 1
             }
           },
           {
             "type": "TextFixed",
-            "title": "Last Name",
+            "title": "LastName",
             "settings": {
               "numWords": 1
             }

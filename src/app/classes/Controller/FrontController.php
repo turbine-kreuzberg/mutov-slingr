@@ -46,7 +46,8 @@ class FrontController extends AbstractController
     public function indexAction($request, $response, $args)
     {
         $templateFiles = array();
-        $fileList = scandir('/var/www/mutov-slingr/app/var/processor-templates');
+        $fullpath = $this->config->get('template_folder');
+        $fileList = scandir($fullpath);
 
         foreach ($fileList as $file) {
             if ($file == '.' || $file == '..') {
@@ -67,7 +68,9 @@ class FrontController extends AbstractController
         /** @todo secure this! */
         $jsonFile = $_GET['templateName'];
 
-        $jsonContent = file_get_contents('/var/www/mutov-slingr/app/var/processor-templates/' . $jsonFile);
+        $fullpath = $this->config->get('template_folder');
+
+        $jsonContent = file_get_contents($fullpath .'/'. $jsonFile);
 
         return $jsonContent;
     }
