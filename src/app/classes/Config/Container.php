@@ -12,6 +12,7 @@ use MutovSlingr\Processor\TemplateProcessor;
 use MutovSlingr\Views\ViewHtml;
 use MutovSlingr\Views\ViewJson;
 use MutovSlingr\Views\ViewPhp;
+use MutovSlingr\Views\ViewXml;
 
 class Container
 {
@@ -41,6 +42,10 @@ class Container
             return new ViewHtml();
         };
 
+        $container[ViewXml::class] = function (\Slim\Container $container) {
+            return new ViewXml();
+        };
+
         $container[Api::class] = function (\Slim\Container $container) {
             $class = new Api($container->get('settings'));
 
@@ -64,6 +69,7 @@ class Container
                 'json' => $container->get(ViewJson::class),
                 'php' => $container->get(ViewPhp::class),
                 'html' => $container->get(ViewHtml::class),
+                'xml' => $container->get(ViewXml::class),
             ];
 
             $class->setViews($views);

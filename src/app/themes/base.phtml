@@ -61,7 +61,7 @@
             <strong>Warning!</strong> <span id="alert-message"></span>
         </div>
 
-        <form action="/slingr/onfly" method="post" target="_blank" id="templateForm">
+        <form action="/slingr/onfly/php" method="post" target="_blank" id="templateForm">
             <div class="form-group">
                 <label for="templateSelection">Predefined templates</label>
                 <select class="form-control" id="templateSelection" name="templateSelection">
@@ -84,6 +84,7 @@
                      <option value="json">JSON</option>
                      <option value="xml">XML</option>
                      <option value="php">PHP Array</option>
+                    <option value="plain">Plain Text</option>
                 </select>
             </div>
             <!--
@@ -116,6 +117,15 @@
         });
 
 
+        $("#outputFormat").on('change',function(){
+
+            var selectedval = $(this).val();
+            if(selectedval == '') return;
+
+            $("#templateForm").attr("action", "/slingr/onfly/" + selectedval);
+
+        });
+
         $("#templateForm").on('submit', function(){
 
             var jsonContent = $("#json_content").val();
@@ -135,7 +145,10 @@
         });
 
 
-        $("#templateSelection").on('click',function(){
+
+
+
+        $("#templateSelection").on('change',function(){
 
             var selectedval = $(this).val();
             if(selectedval == '') return;
