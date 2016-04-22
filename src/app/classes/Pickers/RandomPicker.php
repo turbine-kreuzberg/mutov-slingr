@@ -18,40 +18,82 @@ class RandomPicker implements PickerInterface
 
     protected $min = null;
     protected $max = null;
-    protected $probability = null;
-
+    protected $probability;
+    protected $separator = null;
 
     /**
      * RandomPicker constructor.
-     *
+     * @param $settings
      */
     public function __construct($settings)
     {
         $this->min = (int)$settings['min'];
         $this->max = (int)$settings['max'];
-        $this->probability = $settings['probability'];
+
+        if (isset($settings['probability'])) {
+            $this->probability = (int) $settings['probability'];
+        }
+
+        if (isset($settings['separator'])) {
+            $this->separator = $settings['separator'];
+        }
     }
 
     /**
      * @param string $foreignObject
      * @param string $foreignField
      * @return array
+     * @throws \Exception
      */
     public function pickValues($foreignObject, $foreignField)
     {
-        $columnList = array();
+        $values = array();
 
-        if (rand(1, 100) > $this->probability) {
-            return $columnList;
+        if (is_int($this->probability) && mt_rand(1, 100) >= $this->probability) {
+            return $values;
         }
 
-        $list = array_rand($foreignObject, rand($this->min, $this->max));
+        $min = $this->min;
+        $max = $this->max;
+
+        if ($min > $max) {
+            throw new \Exception('Minimum is greater than maximum.');
+        }
+
+        $countObjects = count($foreignObject);
+
+        if ($min >= $countObjects) {
+            $min = $countObjects;
+        }
+
+        if ($max >= $countObjects) {
+            $max = $countObjects;
+        }
+
+        $list = array_rand($foreignObject, mt_rand($min, $max));
+
+        if (is_scalar($list)) {
+            $list = array($list);
+        }
 
         foreach ($list as $item) {
-            $columnList[] = $foreignObject[$item][$foreignField];
+            $values[] = $foreignObject[$item][$foreignField];
         }
 
-        return $columnList;
+        return $this->formatPickedValues($values);
+    }
+
+    /**
+     * @param array $values
+     * @return array|string
+     */
+    private function formatPickedValues(array $values)
+    {
+        if (is_null($this->separator)) {
+            return $values;
+        }
+
+        return implode($this->separator, $values);
     }
 
 }

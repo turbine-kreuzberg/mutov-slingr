@@ -159,12 +159,10 @@
             }
           },
           {
-            "type": "TextRandom",
+            "type": "Category",
             "title": "_category",
             "settings": {
-              "startsWithLipsum": false,
-              "minWords": 1,
-              "maxWords": 4
+              "fieldName": "name"
             }
           },
           {
@@ -230,9 +228,9 @@
   ],
   "relations" : {
     "product": {
-      "category_ids": {
-        "foreignTable": "category",
-        "foreignField": "_id",
+      "categories": {
+        "foreignObject": "category",
+        "foreignField": "_category",
         "pickerSettings": {
           "type": "random",
           "min": 2,

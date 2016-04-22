@@ -82,15 +82,15 @@ class TemplateProcessor
     /**
      * @param $tableTo
      * @param $columnTo
-     * @param $foreignTable
+     * @param $foreignObject
      * @param $foreignField
      * @param PickerInterface $pickerInstance
      */
-    protected function addElement($tableTo, $columnTo, $foreignTable, $foreignField, PickerInterface $pickerInstance)
+    protected function addElement($tableTo, $columnTo, $foreignObject, $foreignField, PickerInterface $pickerInstance)
     {
         foreach ($this->flatData[$tableTo] as $idx => $item) {
-            $values = $pickerInstance->pickValues($this->flatData[$foreignTable], $foreignField);
-            $this->flatData[$tableTo][$idx][$columnTo] = implode(',', $values);
+            $values = $pickerInstance->pickValues($this->flatData[$foreignObject], $foreignField);
+            $this->flatData[$tableTo][$idx][$columnTo] = $values;
         }
     }
 
@@ -101,7 +101,7 @@ class TemplateProcessor
     {
         foreach ($relations as $tableTo => $relation) {
             foreach ($relation as $columnTo => $relationData) {
-                $foreignObject = $relationData['foreignTable'];
+                $foreignObject = $relationData['foreignObject'];
                 $foreignField = $relationData['foreignField'];
                 $pickerSettings = $relationData['pickerSettings'];
                 $pickerClass = 'MutovSlingr\\Pickers\\' . ucfirst($pickerSettings['type']) . 'Picker';
