@@ -1,0 +1,123 @@
+{
+  "templates": [
+    {
+      "label": "customers",
+      "definition": {
+        "numRows": 10,
+        "countries": [],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 1
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "First Name",
+            "settings": {
+              "numWords": 1
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "Last Name",
+            "settings": {
+              "numWords": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "products",
+      "definition": {
+        "numRows": 10,
+        "countries": [],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 1
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "Name",
+            "settings": {
+              "numWords": 2
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "Description",
+            "settings": {
+              "numWords": 10
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "orders",
+      "definition": {
+        "numRows": 10,
+        "countries": [],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 1
+            }
+          },
+          {
+            "type": "Date",
+            "title": "Date",
+            "settings": {
+              "fromDate": "01/01/2015",
+              "toDate": "01/01/2020",
+              "placeholder": "Y-m-d H:i:s"
+            }
+          },
+          {
+            "type": "NumberRange",
+            "title": "value",
+            "settings": {
+              "rangeMin": 10,
+              "rangeMax": 500
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "relations" : {
+    "orders": {
+      "customer_id": {
+        "foreignTable": "customers",
+        "foreignField": "id",
+        "pickerSettings": {
+          "type": "single"
+        }
+      },
+      "product_id": {
+        "foreignTable": "products",
+        "foreignField": "id",
+        "pickerSettings": {
+          "type": "random",
+          "min": 2,
+          "max": 5,
+          "probability": 100
+        }
+      }
+    }
+
+  }
+}
+

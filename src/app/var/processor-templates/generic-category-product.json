@@ -4,7 +4,6 @@
       "label": "category",
       "definition": {
         "numRows": 10,
-        "gdNumRowsToGenerate": 10,
         "countries": [],
         "rows": [
           {
@@ -12,7 +11,7 @@
             "title": "id",
             "settings": {
               "incrementStart": 1,
-              "incrementValue": 2
+              "incrementValue": 1
             }
           },
           {
@@ -30,21 +29,13 @@
               "numWords": 3
             }
           }
-        ],
-        "export": {
-          "type": "JSON",
-          "settings": {
-            "stripWhitespace": false,
-            "dataStructureFormat": "simple"
-          }
-        }
+        ]
       }
     },
     {
       "label": "product",
       "definition": {
         "numRows": 50,
-        "gdNumRowsToGenerate": 50,
         "countries": [],
         "rows": [
           {
@@ -57,19 +48,19 @@
           },
           {
             "type": "TextFixed",
-            "title": "label",
+            "title": "name",
             "settings": {
               "numWords": 3
             }
+          },
+          {
+            "type": "TextFixed",
+            "title": "description",
+            "settings": {
+              "numWords": 10
+            }
           }
-        ],
-        "export": {
-          "type": "JSON",
-          "settings": {
-            "stripWhitespace": false,
-            "dataStructureFormat": "simple"
-          }
-        }
+        ]
       }
     }
   ],

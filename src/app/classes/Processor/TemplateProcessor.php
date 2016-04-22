@@ -55,22 +55,23 @@ class TemplateProcessor
 
         $this->flatData = $this->generateFlatData($template['templates']);
 
-        foreach($template['relations'] as $tableTo=>$relation)
-        {
+        if(isset($template['relations'])){
+            foreach ($template['relations'] as $tableTo => $relation) {
 
-            foreach($relation as  $columnTo=>$relationData){
+                foreach ($relation as $columnTo => $relationData) {
 
-                $foreignTable = $relationData['foreignTable'];
-                $foreignField = $relationData['foreignField'];
-                $pickerSettings = $relationData['pickerSettings'];
-                $pickerClass = 'MutovSlingr\\Pickers\\'.ucfirst($pickerSettings['type']).'Picker';
+                    $foreignTable = $relationData['foreignTable'];
+                    $foreignField = $relationData['foreignField'];
+                    $pickerSettings = $relationData['pickerSettings'];
+                    $pickerClass = 'MutovSlingr\\Pickers\\' . ucfirst($pickerSettings['type']) . 'Picker';
 
-                $pickerInstance = new $pickerClass($pickerSettings);
+                    $pickerInstance = new $pickerClass($pickerSettings);
 
-                $this->addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance);
+                    $this->addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance);
+
+                }
 
             }
-
         }
 
         return $this->flatData;
