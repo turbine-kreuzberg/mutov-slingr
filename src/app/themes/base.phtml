@@ -57,9 +57,13 @@
         <h1>MUTOV Slingr UI</h1>
         <p class="lead">Generic Test Data Generator</p>
 
-        <form action="/slingr/onfly" method="post" target="_blank">
+        <div class="alert alert-warning" id="status-message-block" style="display:none">
+            <strong>Warning!</strong> <span id="alert-message"></span>
+        </div>
+
+        <form action="/slingr/onfly" method="post" target="_blank" id="templateForm">
             <div class="form-group">
-                <label for="exampleInputEmail1">Predefined templates</label>
+                <label for="templateSelection">Predefined templates</label>
                 <select class="form-control" id="templateSelection" name="templateSelection">
                         <option value="">- Select a template -</option>
                     <?php foreach($data['templateList'] as $template){ ?>
@@ -69,9 +73,18 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="exampleInputPassword1">Template</label>
+                <label for="json_content">Template</label>
                 <textarea name="json_content" id="json_content" class="form-control" rows="20"></textarea>
                 <p class="help-block">Paste the configuration template in JSON format.</p>
+            </div>
+            <div class="form-group">
+                <label for="outputFormat">Output Format</label>
+                <select class="form-control" id="outputFormat" name="outputFormat">
+                    <option value="">- Select a format -</option>
+                     <option value="json">JSON</option>
+                     <option value="xml">XML</option>
+                     <option value="php">PHP Array</option>
+                </select>
             </div>
             <!--
             <div class="form-group">
@@ -92,27 +105,55 @@
 </div><!-- /.container -->
 
 
-
-
-
-
-
-
-
 <script>
 
-    $("#templateSelection").on('click',function(){
+    $(function(){
 
-        var selectedval = $(this).val();
+        $("#status-message-block").hide();
+        $("#status-message-block").on('click', function(){
+            $(this).hide('slow');
 
-        if(selectedval == '') return;
+        });
 
-        $.get( "/front/templates", { templateName: selectedval} )
-            .done(function( data ) {
-                $("#json_content").val(data); //console.log(data );
-            });
+
+        $("#templateForm").on('submit', function(){
+
+            var jsonContent = $("#json_content").val();
+            var outputFormat = $("#outputFormat").val();
+
+            if($.trim(jsonContent) == '' || $.trim(outputFormat) == ''){
+
+                $("#alert-message").html('Please fill the template and select an output format');
+                $("#status-message-block").show('slow');
+                return false;
+            }
+
+            $("#status-message-block").hide();
+            return true;
+
+
+        });
+
+
+        $("#templateSelection").on('click',function(){
+
+            var selectedval = $(this).val();
+            if(selectedval == '') return;
+
+            $.get( "/front/templates", { templateName: selectedval} )
+                .done(function( data ) {
+                    $("#json_content").val(data); //console.log(data );
+                });
+
+        });
 
     });
+
+
+
+
+
+
 
 
 
