@@ -10,33 +10,42 @@ namespace MutovSlingr\Pickers;
 
 
 /**
- * Class RandomPicker
+ * Class SinglePicker
  * @package MutovSlingr\Pickers
  */
 class SinglePicker implements PickerInterface
 {
 
-
+    protected $probability;
 
     /**
-     * RandomPicker constructor.
+     * SinglePicker constructor.
      *
      */
     public function __construct($settings)
     {
-
-
-
+        if (isset($settings['probability'])) {
+            $this->probability = (int) $settings['probability'];
+        }
     }
 
-
-    public function pickValues($foreignTable, $foreignField)
+    /**
+     * @param string $foreignObject
+     * @param string $foreignField
+     * @return array
+     */
+    public function pickValues($foreignObject, $foreignField)
     {
-        $columnList = array();
+        $values = array();
 
-        $key = array_rand($foreignTable, 1);
-        $columnList[] = $foreignTable[$key][$foreignField];
-        return $columnList;
+        if (is_int($this->probability) && mt_rand(1, 100) >= $this->probability) {
+            return $values;
+        }
+
+        $key = array_rand($foreignObject, 1);
+        $values[] = $foreignObject[$key][$foreignField];
+
+        return $values;
     }
 
 }

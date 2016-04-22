@@ -100,14 +100,14 @@
   "relations" : {
     "orders": {
       "customer_id": {
-        "foreignTable": "customers",
+        "foreignObject": "customers",
         "foreignField": "id",
         "pickerSettings": {
           "type": "single"
         }
       },
       "product_id": {
-        "foreignTable": "products",
+        "foreignObject": "products",
         "foreignField": "id",
         "pickerSettings": {
           "type": "random",
