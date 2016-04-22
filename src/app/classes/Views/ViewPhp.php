@@ -9,6 +9,12 @@ namespace MutovSlingr\Views;
  */
 class ViewPhp extends View
 {
+    /**
+     * @var array
+     */
+    protected $headers = array(
+      'Content-Type' => self::CONTENT_TYPE
+    );
 
     /**
      * @param array $content

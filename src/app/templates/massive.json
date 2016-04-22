@@ -1,0 +1,91 @@
+{
+  "templates": [
+    {
+      "label": "category",
+      "definition": {
+        "numRows": 10000,
+        "gdNumRowsToGenerate": 10000,
+        "countries": [],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 2
+            }
+          },
+          {
+            "type": "Tree",
+            "title": "parent",
+            "settings": {
+              "autoIncRowNum": 1,
+              "maxSiblings": 5
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "label",
+            "settings": {
+              "numWords": 3
+            }
+          }
+        ],
+        "export": {
+          "type": "JSON",
+          "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+          }
+        }
+      }
+    },
+    {
+      "label": "product",
+      "definition": {
+        "numRows": 5000,
+        "gdNumRowsToGenerate": 5000,
+        "countries": [],
+        "rows": [
+          {
+            "type": "AutoIncrement",
+            "title": "id",
+            "settings": {
+              "incrementStart": 1,
+              "incrementValue": 1
+            }
+          },
+          {
+            "type": "TextFixed",
+            "title": "label",
+            "settings": {
+              "numWords": 3
+            }
+          }
+        ],
+        "export": {
+          "type": "JSON",
+          "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+          }
+        }
+      }
+    }
+  ],
+  "relations" : {
+    "product": {
+        "category_id": {
+          "foreignTable": "category",
+          "foreignField": "id",
+          "pickerSettings": {
+            "type": "random",
+            "min": 2,
+            "max": 5,
+            "probability": 70
+          }
+        }
+    }
+    }
+}
+
