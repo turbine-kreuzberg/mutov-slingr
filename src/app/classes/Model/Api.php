@@ -37,13 +37,10 @@ class Api
         $client = new Client();
         $process_result = $client->post(
             $this->config->get('api_host'),
-          ['json' => json_decode($json, true)]
+            ['json' => json_decode($json, true)]
         );
 
         return $process_result->getBody()->getContents();
     }
-
-
-
 
 }

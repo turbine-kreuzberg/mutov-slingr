@@ -8,7 +8,7 @@
 
 namespace MutovSlingr\Controller;
 
-use MutovSlingr\Core\Controller;
+use MutovSlingr\Controller\AbstractController;
 use MutovSlingr\Loader\TemplateLoader;
 use MutovSlingr\Processor\TemplateProcessor;
 use Slim\Interfaces\CollectionInterface;
@@ -20,10 +20,8 @@ use Slim\Interfaces\CollectionInterface;
  *
  * @package MutovSlingr\Controller
  */
-class FrontController extends Controller
+class FrontController extends AbstractController
 {
-
-
 
     /**
      * @var array
@@ -37,57 +35,49 @@ class FrontController extends Controller
     {
         $this->view = new \MutovSlingr\Views\ViewHtml();
 
-        $this->view->setLayout('/var/www/mutov-slingr/app/themes');
+        $this->getView()->setLayout('/var/www/mutov-slingr/app/themes');
     }
-
 
     /**
      *
      * @param array $args
      * @return string
      */
-    public function indexAction($request, $response, $args  )
+    public function indexAction($request, $response, $args)
     {
-
         $templateFiles = array();
         $fileList = scandir('/var/www/mutov-slingr/app/var/processor-templates');
 
-        foreach($fileList as $file){
-            if($file == '.' || $file == '..') continue;
+        foreach ($fileList as $file) {
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
 
             $templateFiles[] = $file;
-
         }
 
+        $this->getView()->setThemeFile('base.phtml');
 
-
-
-
-        return $this->view->render('base.phtml',
-            array( 'templateList' => $templateFiles));
+        return $this->getView()->render(array('templateList' => $templateFiles));
     }
 
 
-
-    public function templatesAction($request, $response, $args  )
+    public function templatesAction($request, $response, $args)
     {
-
+        /** @todo secure this! */
         $jsonFile = $_GET['templateName'];
 
-        $jsonContent = file_get_contents('/var/www/mutov-slingr/app/var/processor-templates/'.$jsonFile);
+        $jsonContent = file_get_contents('/var/www/mutov-slingr/app/var/processor-templates/' . $jsonFile);
+
         return $jsonContent;
     }
-
-
 
     /**
      * @param CollectionInterface $config
      */
-    public function setConfig(CollectionInterface $config )
+    public function setConfig(CollectionInterface $config)
     {
         $this->config = $config;
     }
-
-
 
 }

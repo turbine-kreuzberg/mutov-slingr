@@ -8,7 +8,7 @@
 
 namespace MutovSlingr\Controller;
 
-use MutovSlingr\Core\Controller;
+use MutovSlingr\Controller\AbstractController;
 
 /**
  * Class ErrorController
@@ -17,7 +17,7 @@ use MutovSlingr\Core\Controller;
  *
  * @package MutovSlingr\Controller
  */
-class ErrorController extends Controller
+class ErrorController extends AbstractController
 {
     /**
      * Error handling
@@ -27,7 +27,7 @@ class ErrorController extends Controller
      */
     public function errorAction( \Exception $exception )
     {
-        return $this->view->render(
+        return $this->getView()->render(
           array(
             'error' => $exception->getMessage(),
             'trace' => $exception->getTrace(),
@@ -42,7 +42,7 @@ class ErrorController extends Controller
      */
     public function notFoundAction()
     {
-        return $this->view->render( array( 'error' => 'Page not found!' ) );
+        return $this->getView()->render( array( 'error' => 'Page not found!' ) );
     }
 
 }

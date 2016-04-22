@@ -7,23 +7,23 @@
  */
 
 namespace MutovSlingr\Processor;
-use MutovSlingr\Model\Api;
-use Ospinto\dBug;
-use Slim\Interfaces\CollectionInterface;
 
+use MutovSlingr\Model\Api;
+use MutovSlingr\Pickers\PickerInterface;
+use Slim\Interfaces\CollectionInterface;
 
 class TemplateProcessor
 {
 
-    protected $flatData = NULL;
+    protected $flatData = null;
 
     /**
      * @var Api $api
      */
-    protected $api = NULL;
+    protected $api = null;
 
     /**
-     * @var CollectionInterface
+     * @var CollectionInterface $config
      */
     private $config;
 
@@ -38,9 +38,8 @@ class TemplateProcessor
         $this->api = $api;
     }
 
-
     /**
-     * @param string $templatesContent
+     * @param array $templatesContent
      *
      * @return array
      */
@@ -48,20 +47,21 @@ class TemplateProcessor
     {
         $entitiesList = array();
 
-        foreach($templatesContent as $template){
+        if (is_array($templatesContent)) {
+            foreach ($templatesContent as $template) {
+                $label = $template['label'];
+                $templateDefinition = $template['definition'];
 
-            $label = $template['label'];
-            $templateDefinition = $template['definition'];
+                $templateDefinition = array_merge($templateDefinition,
+                    $this->config->get('data_generator_export_configuration'));
 
-            $templateDefinition = array_merge($templateDefinition, $this->config->get('data_generator_export_configuration'));
+                $definition = json_encode($templateDefinition);
 
-            $definition = json_encode($templateDefinition);
-
-            $entitiesList[$label] = json_decode($this->api->apiCall($definition),true);
+                $entitiesList[$label] = json_decode($this->api->apiCall($definition), true);
+            }
         }
 
         return $entitiesList;
-
     }
 
     /**
@@ -70,47 +70,47 @@ class TemplateProcessor
      */
     public function processTemplate($template)
     {
-
         $this->flatData = $this->generateFlatData($template['templates']);
 
-        foreach($template['relations'] as $tableTo=>$relation)
-        {
-
-            foreach($relation as  $columnTo=>$relationData){
-
-                $foreignTable = $relationData['foreignTable'];
-                $foreignField = $relationData['foreignField'];
-                $pickerSettings = $relationData['pickerSettings'];
-                $pickerClass = 'MutovSlingr\\Pickers\\'.ucfirst($pickerSettings['type']).'Picker';
-
-                $pickerInstance = new $pickerClass($pickerSettings);
-
-                $this->addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance);
-
-            }
-
+        if (isset($template['relations']) && is_array($template['relations'])) {
+            $this->processRelations($template['relations']);
         }
 
         return $this->flatData;
     }
 
-
-    protected function addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance)
+    /**
+     * @param $tableTo
+     * @param $columnTo
+     * @param $foreignTable
+     * @param $foreignField
+     * @param PickerInterface $pickerInstance
+     */
+    protected function addElement($tableTo, $columnTo, $foreignTable, $foreignField, PickerInterface $pickerInstance)
     {
-
-        foreach($this->flatData[$tableTo] as $idx=>$item){
-
+        foreach ($this->flatData[$tableTo] as $idx => $item) {
             $values = $pickerInstance->pickValues($this->flatData[$foreignTable], $foreignField);
-
-            $this->flatData[$tableTo][$idx][$columnTo] = implode(',',$values);
-
+            $this->flatData[$tableTo][$idx][$columnTo] = implode(',', $values);
         }
-
-
-
-
     }
 
+    /**
+     * @param array $relations
+     */
+    private function processRelations(array $relations)
+    {
+        foreach ($relations as $tableTo => $relation) {
+            foreach ($relation as $columnTo => $relationData) {
+                $foreignObject = $relationData['foreignTable'];
+                $foreignField = $relationData['foreignField'];
+                $pickerSettings = $relationData['pickerSettings'];
+                $pickerClass = 'MutovSlingr\\Pickers\\' . ucfirst($pickerSettings['type']) . 'Picker';
 
+                $pickerInstance = new $pickerClass($pickerSettings);
+
+                $this->addElement($tableTo, $columnTo, $foreignObject, $foreignField, $pickerInstance);
+            }
+        }
+    }
 
 }
