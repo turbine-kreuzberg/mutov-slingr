@@ -10,7 +10,7 @@
 
 namespace MutovSlingr\Views;
 
-abstract class View
+abstract class View implements ViewInterface
 {
     const CONTENT_TYPE = 'text/plain';
 
@@ -21,6 +21,6 @@ abstract class View
      */
     public function getContentType()
     {
-        return self::CONTENT_TYPE;
+        return $this::CONTENT_TYPE;
     }
 }

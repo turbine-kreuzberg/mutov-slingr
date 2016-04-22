@@ -13,12 +13,12 @@ namespace MutovSlingr\Pickers;
  * Class RandomPicker
  * @package MutovSlingr\Pickers
  */
-class RandomPicker
+class RandomPicker implements PickerInterface
 {
 
-    protected $min = NULL;
-    protected $max = NULL;
-    protected $probability = NULL;
+    protected $min = null;
+    protected $max = null;
+    protected $probability = null;
 
 
     /**
@@ -27,29 +27,31 @@ class RandomPicker
      */
     public function __construct($settings)
     {
-
         $this->min = (int)$settings['min'];
         $this->max = (int)$settings['max'];
         $this->probability = $settings['probability'];
-
     }
 
-
-    public function pickValues($foreignTable, $foreignField)
+    /**
+     * @param string $foreignObject
+     * @param string $foreignField
+     * @return array
+     */
+    public function pickValues($foreignObject, $foreignField)
     {
-
         $columnList = array();
 
-        if(rand(1,100) > $this->probability) return $columnList;
+        if (rand(1, 100) > $this->probability) {
+            return $columnList;
+        }
 
-        $list = array_rand($foreignTable, rand($this->min,$this->max));
+        $list = array_rand($foreignObject, rand($this->min, $this->max));
 
-        foreach($list as $item){
-            $columnList[] = $foreignTable[$item][$foreignField];
+        foreach ($list as $item) {
+            $columnList[] = $foreignObject[$item][$foreignField];
         }
 
         return $columnList;
-
     }
 
 }

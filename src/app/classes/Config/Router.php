@@ -33,8 +33,23 @@ class Router
 
         $this->app->get('/process', 'MutovSlingr\Controller\HomeController:processAction');
 
-        // Slingr route
-        $this->app->any( '/slingr/{action}[/{template}]',
+
+        // Slingr routes
+        $this->app->any( '/slingr/onfly[/{outputFormat}]',
+            function ( Request $request, Response $response, $args ) {
+
+                /** @var SlingrController $controller */
+                $controller = $this->get(SlingrController::class);
+
+                // Call action
+                $content = $controller->onflyAction( $args, $request );
+
+                // Return Response Object
+                return $response->write( $content )->withHeader( 'Content-Type',
+                    $controller->getView()->getContentType() );
+            } );
+
+        $this->app->any( '/slingr/{action}[/{template}[/{outputFormat}]]',
           function ( Request $request, Response $response, $args ) {
 
                 /** @var SlingrController $controller */
@@ -49,10 +64,8 @@ class Router
               $content = $controller->{$args['action'].'Action'}( $args, $request );
 
               // Return Response Object
-              return $response->write( $content )->withHeader( 'Content-Type',
-                $controller->getView()->getContentType() );
+              return $response->write( $content )->withHeader( 'Content-Type', $controller->getView()->getContentType() );
           } );
-
 
         // Front route
         $this->app->get( '/front/{action}[/{template}]',
@@ -70,10 +83,8 @@ class Router
                 $content = $controller->{$args['action'].'Action'}($request, $response, $args  );
 
                 // Return Response Object
-                return $response->write( $content )->withHeader( 'Content-Type',
-                    $controller->getView()->getContentType() );
+                return $response->write( $content )->withHeader( 'Content-Type', $controller->getView()->getContentType() );
             } );
-
     }
 
     /**
