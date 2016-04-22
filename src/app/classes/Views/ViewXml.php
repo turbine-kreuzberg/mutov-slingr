@@ -13,6 +13,11 @@ class ViewXml extends View
 {
     const CONTENT_TYPE = 'application/xml';
 
+
+    protected $headers = array(
+        'Content-Type' => self::CONTENT_TYPE
+    );
+
     /**
      * @param array $content
      * @return string
