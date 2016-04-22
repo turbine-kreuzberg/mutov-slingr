@@ -111,20 +111,19 @@ function stripIdFieldFromCategories($categories)
  * @param $categories
  * @return array
  */
-function getCategoriesForProduct($product, $categories) {
+function getCategoriesForProduct($product) {
     $categoryProductMapping = array();
-    $categoryIds = explode(',', $product['category_ids']);
+//    $categoryIds = explode(',', $product['category_ids']);
 
-    foreach ($categoryIds as $categoryId) {
-        foreach ($categories as $category) {
-            if ($category['_id'] == $categoryId) {
-                $categoryProductMapping[] = array(
-                    '_root' => $category['_root'],
-                    '_category' => $category['_category'],
-                    '_sku' => $product['sku'],
-                );
-            }
-        }
+    $categoryPositions = [];
+
+    foreach ($product['categories'] as $category) {
+        $categoryProductMapping[] = array(
+            '_root' => 'Default Category',
+            '_category' => $category,
+            '_sku' => $product['sku'],
+            'position' => $categoryPositions[$category]++,
+        );
     }
 
     return $categoryProductMapping;
@@ -150,10 +149,10 @@ echo sprintf('Processing %d products: %s', $countProducts, str_repeat('0', $len)
 foreach ($products as $product) {
     echo "\033[" . $len . "D";      // Move 5 characters backward
     echo str_pad($count++, $len, '0', STR_PAD_LEFT);
-    $mapping = array_merge($mapping, getCategoriesForProduct($product, $categories));
+    $mapping = array_merge($mapping, getCategoriesForProduct($product));
 }
 
-file_put_contents('testmapping.php', '<?php $mapping =' . var_export($mapping, true) . ';');
+//file_put_contents('testmapping.php', '<?php $mapping =' . var_export($mapping, true) . ';');
 //include_once 'testmapping.php';
 
 runImport($dryrun, $mapping, 'categoryProducts');

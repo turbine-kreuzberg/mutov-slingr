@@ -6,5 +6,6 @@
 /src/web/resources
 /ansible/roles/geerlingguy.*
 /ansible/roles/cascaya.*
+/src/app/var/*
 _git_backup
 *.yml
