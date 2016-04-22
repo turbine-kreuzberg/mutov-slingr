@@ -61,7 +61,7 @@
             <strong>Warning!</strong> <span id="alert-message"></span>
         </div>
 
-        <form action="/slingr/onfly/php" method="post" target="_blank" id="templateForm">
+        <form action="/slingr/onfly/xml/download" method="post" target="_blank" id="templateForm">
             <div class="form-group">
                 <label for="templateSelection">Predefined templates</label>
                 <select class="form-control" id="templateSelection" name="templateSelection">
@@ -80,7 +80,6 @@
             <div class="form-group">
                 <label for="outputFormat">Output Format</label>
                 <select class="form-control" id="outputFormat" name="outputFormat">
-                    <option value="">- Select a format -</option>
                      <option value="json">JSON</option>
                      <option value="xml">XML</option>
                      <option value="php">PHP Array</option>

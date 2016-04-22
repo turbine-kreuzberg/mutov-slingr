@@ -34,8 +34,8 @@ class Router
         $this->app->get('/', 'MutovSlingr\Controller\HomeController:indexAction');
 
         // Slingr routes
-        $this->app->any( '/slingr/onfly[/{outputFormat}]',
-            function ( Request $request, Response $response, $args ) {
+        $this->app->any( '/slingr/onfly[/{outputFormat}[/{download}]]',
+            function ( Request $request, Response $response, $args ) use($router) {
 
                 /** @var SlingrController $controller */
                 $controller = $this->get(SlingrController::class);
@@ -44,8 +44,8 @@ class Router
                 $content = $controller->onflyAction( $args, $request );
 
                 // Return Response Object
-                return $response->write( $content )->withHeader( 'Content-Type',
-                    $controller->getView()->getContentType() );
+                $response->write( $content );
+                return $router->responseWithHeaders( $response, $controller->getView()->getHeaders() );
             } );
 
 

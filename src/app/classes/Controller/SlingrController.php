@@ -58,7 +58,7 @@ class SlingrController extends AbstractController
             }
 
             if (isset($args['download']) && $args['download'] === 'download') {
-                $this->getView()->addHeaders( $this->getDownloadHeadersForFile( $args['template'].'.'.$outputFormat ) );
+                $this->getView($outputFormat)->addHeaders( $this->getDownloadHeadersForFile( $args['template'].'.'.$outputFormat ) );
             }
         }
 
@@ -74,6 +74,10 @@ class SlingrController extends AbstractController
 
         if (isset($args['outputFormat']) && is_string($args['outputFormat'])) {
             $outputFormat = $args['outputFormat'];
+        }
+
+        if (isset($args['download']) && $args['download'] === 'download') {
+            $this->getView($outputFormat)->addHeaders( $this->getDownloadHeadersForFile( 'data.'.$outputFormat ) );
         }
 
         $jsonContent = $request->getParsedBody()['json_content'];
