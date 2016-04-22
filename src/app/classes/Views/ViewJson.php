@@ -11,6 +11,11 @@ class ViewJson extends View
 {
     const CONTENT_TYPE = 'application/json';
 
+
+    protected $headers = array(
+      'Content-Type' => self::CONTENT_TYPE
+    );
+
     /**
      * @param array $content
      * @return string

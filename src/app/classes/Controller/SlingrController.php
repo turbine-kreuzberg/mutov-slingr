@@ -11,7 +11,6 @@ namespace MutovSlingr\Controller;
 use MutovSlingr\Controller\AbstractController;
 use MutovSlingr\Loader\TemplateLoader;
 use MutovSlingr\Processor\TemplateProcessor;
-use Ospinto\dBug;
 use Slim\Interfaces\CollectionInterface;
 
 /**
@@ -103,6 +102,20 @@ class SlingrController extends AbstractController
     public function setTemplateLoader(TemplateLoader $templateLoader)
     {
         $this->templateLoader = $templateLoader;
+    }
+
+    public function getDownloadHeadersForFile( $file )
+    {
+        return array(
+          'Content-Description'       => 'File Transfer',
+          'Content-Type'              => 'application/octet-stream',
+          'Content-Disposition'       => 'attachment; filename='.$file,
+          'Content-Transfer-Encoding' => 'binary',
+          'Connection'                => 'Keep-Alive',
+          'Expires'                   => '0',
+          'Cache-Control'             => 'must-revalidate, post-check=0, pre-check=0',
+          'Pragma'                    => 'public'
+        );
     }
 
 }

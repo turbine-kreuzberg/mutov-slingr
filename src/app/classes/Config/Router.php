@@ -24,6 +24,7 @@ class Router
     public function __construct(App $app)
     {
         $this->app = $app;
+        $router = $this;
 
         $this->errorHandling();
 
@@ -49,8 +50,10 @@ class Router
                     $controller->getView()->getContentType() );
             } );
 
+        
+        // Slingr route
         $this->app->any( '/slingr/{action}[/{template}[/{outputFormat}]]',
-          function ( Request $request, Response $response, $args ) {
+          function ( Request $request, Response $response, $args ) use($router) {
 
                 /** @var SlingrController $controller */
                 $controller = $this->get(SlingrController::class);
@@ -64,7 +67,9 @@ class Router
               $content = $controller->{$args['action'].'Action'}( $args, $request );
 
               // Return Response Object
-              return $response->write( $content )->withHeader( 'Content-Type', $controller->getView()->getContentType() );
+              $response->write( $content );
+
+              return $router->responseWithHeaders( $response, $controller->getView()->getHeaders() );
           } );
 
         // Front route
@@ -130,6 +135,24 @@ class Router
                     ->write($content);
             };
         };
+    }
+
+    /**
+     * Set an array of headers to a response
+     *
+     * @param Response $response
+     * @param array    $headers
+     * @return Response|static
+     */
+    public function responseWithHeaders( $response, $headers )
+    {
+        if (!empty($headers)) {
+            foreach ($headers as $field => $value) {
+                $response = $response->withHeader( $field, $value );
+            }
+        }
+
+        return $response;
     }
 
 }

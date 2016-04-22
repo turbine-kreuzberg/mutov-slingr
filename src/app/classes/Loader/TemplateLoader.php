@@ -14,6 +14,9 @@ use Slim\Interfaces\CollectionInterface;
 class TemplateLoader
 {
 
+    /**
+     * @var CollectionInterface
+     */
     private $config;
 
     /**
