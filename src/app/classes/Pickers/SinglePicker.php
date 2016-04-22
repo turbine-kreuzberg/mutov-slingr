@@ -13,7 +13,7 @@ namespace MutovSlingr\Pickers;
  * Class RandomPicker
  * @package MutovSlingr\Pickers
  */
-class SinglePicker
+class SinglePicker implements PickerInterface
 {
 
 
