@@ -11,6 +11,7 @@ namespace MutovSlingr\Controller;
 use MutovSlingr\Core\Controller;
 use MutovSlingr\Loader\TemplateLoader;
 use MutovSlingr\Processor\TemplateProcessor;
+use Ospinto\dBug;
 use Slim\Interfaces\CollectionInterface;
 
 /**
@@ -43,11 +44,23 @@ class SlingrController extends Controller
      * @param array $args
      * @return string
      */
-    public function generateAction( array $args = array() )
+    public function generateAction( array $args = array(), $request )
     {
 
         $template = $this->templateLoader->loadTemplate('test.json');
         $result = $this->processor->processTemplate($template);
+
+        return $this->view->render( array( 'result' => $result ) );
+    }
+
+
+    public function onflyAction( array $args = array(), $request )
+    {
+
+        $jsonContent = $request->getParsedBody()['json_content'];
+        $contents = json_decode($jsonContent, true);
+
+        $result = $this->processor->processTemplate($contents);
 
         return $this->view->render( array( 'result' => $result ) );
     }

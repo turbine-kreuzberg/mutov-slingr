@@ -71,55 +71,27 @@ class TemplateProcessor
     public function processTemplate($template)
     {
 
-        //echo('<h1>Template content</h1>');
-        //new dbug($templateContent);
-
-        //exit;
-
         $this->flatData = $this->generateFlatData($template['templates']);
-
-        //echo('<h1>Original data</h1>');
-        //new dBug($this->flatData);
-
-
 
         foreach($template['relations'] as $tableTo=>$relation)
         {
 
-            //new dBug($tableTo);
-            //new dBug($relation);
-
             foreach($relation as  $columnTo=>$relationData){
-
-                //new dBug($columnTo);
-                //new dBug($relationData);
 
                 $foreignTable = $relationData['foreignTable'];
                 $foreignField = $relationData['foreignField'];
                 $pickerSettings = $relationData['pickerSettings'];
                 $pickerClass = 'MutovSlingr\\Pickers\\'.ucfirst($pickerSettings['type']).'Picker';
 
-
                 $pickerInstance = new $pickerClass($pickerSettings);
-                //$picker = new RandomPicker($pickerSettings);
 
                 $this->addElement($tableTo, $columnTo, $foreignTable, $foreignField, $pickerInstance);
 
             }
 
-            //echo('<h1>Result array</h1>');
-            //new dbug($this->flatData);
-
-
-
-
         }
 
         return $this->flatData;
-        // process relations
-
-
-
     }
 
 

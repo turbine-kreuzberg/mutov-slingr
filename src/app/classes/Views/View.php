@@ -17,4 +17,6 @@ abstract class View
 
     const CONTENT_TYPE_TEXT_PLAIN = 'test/plain';
 
+    const CONTENT_TYPE_TEXT_HTML = 'text/html';
+
 }
