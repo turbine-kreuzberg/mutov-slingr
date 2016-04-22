@@ -94,7 +94,7 @@
             -->
             <div class="checkbox">
                 <label>
-                    <input type="checkbox"> Download Output
+                    <input type="checkbox" id="downloadOutput" value="1"> Download Output
                 </label>
             </div>
             <button type="submit" class="btn btn-primary">Go &amp; Get Your Beer</button>
@@ -115,19 +115,11 @@
         });
 
 
-        $("#outputFormat").on('change',function(){
-
-            var selectedval = $(this).val();
-            if(selectedval == '') return;
-
-            $("#templateForm").attr("action", "/slingr/onfly/" + selectedval);
-
-        });
-
         $("#templateForm").on('submit', function(){
 
             var jsonContent = $("#json_content").val();
             var outputFormat = $("#outputFormat").val();
+            var isTodownloadOutput = $('#downloadOutput').is(':checked');
 
             if($.trim(jsonContent) == '' || $.trim(outputFormat) == ''){
 
@@ -136,14 +128,18 @@
                 return false;
             }
 
+
+            if(isTodownloadOutput)
+                $("#templateForm").attr("action", "/slingr/onfly/" + outputFormat + "/download");
+            else
+                $("#templateForm").attr("action", "/slingr/onfly/" + outputFormat);
+
+
             $("#status-message-block").hide();
             return true;
 
 
         });
-
-
-
 
 
         $("#templateSelection").on('change',function(){
@@ -159,19 +155,6 @@
         });
 
     });
-
-
-
-
-
-
-
-
-
-
-
 </script>
-
 </body>
 </html>
-
