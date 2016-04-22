@@ -4,6 +4,7 @@ namespace MutovSlingr\Config;
 
 
 use Interop\Container\ContainerInterface;
+use MutovSlingr\Controller\ErrorController;
 use MutovSlingr\Controller\SlingrController;
 use MutovSlingr\Controller\FrontController;
 use MutovSlingr\Loader\TemplateLoader;
@@ -70,6 +71,20 @@ class Container
                 'php' => $container->get(ViewPhp::class),
                 'html' => $container->get(ViewHtml::class),
                 'xml' => $container->get(ViewXml::class),
+            ];
+
+            $class->setViews($views);
+
+            return $class;
+        };
+
+        $container[ErrorController::class] = function (\Slim\Container $container) {
+            $class = new ErrorController();
+
+            $views = [
+              'json' => $container->get(ViewJson::class),
+              'php' => $container->get(ViewPhp::class),
+              'html' => $container->get(ViewHtml::class),
             ];
 
             $class->setViews($views);
