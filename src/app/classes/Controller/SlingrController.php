@@ -48,13 +48,17 @@ class SlingrController extends AbstractController
         $templateFileName = 'test.json';
         $outputFormat = 'json';
 
-        if (is_array($args)) {
-            if (isset($args['template']) && is_string($args['template'])) {
-                $templateFileName = $args['template'] . '.json';
+        if (is_array( $args )) {
+            if (isset($args['template']) && is_string( $args['template'] )) {
+                $templateFileName = $args['template'].'.json';
             }
 
-            if (isset($args['outputFormat']) && is_string($args['outputFormat'])) {
+            if (isset($args['outputFormat']) && is_string( $args['outputFormat'] )) {
                 $outputFormat = $args['outputFormat'];
+            }
+
+            if (isset($args['download']) && $args['download'] === 'download') {
+                $this->getView()->addHeaders( $this->getDownloadHeadersForFile( $args['template'].'.'.$outputFormat ) );
             }
         }
 
@@ -104,12 +108,18 @@ class SlingrController extends AbstractController
         $this->templateLoader = $templateLoader;
     }
 
-    public function getDownloadHeadersForFile( $file )
+    /**
+     * Get an download header for controller
+     *
+     * @param $fileName
+     * @return array
+     */
+    public function getDownloadHeadersForFile( $fileName )
     {
         return array(
           'Content-Description'       => 'File Transfer',
           'Content-Type'              => 'application/octet-stream',
-          'Content-Disposition'       => 'attachment; filename='.$file,
+          'Content-Disposition'       => 'attachment; filename='.$fileName,
           'Content-Transfer-Encoding' => 'binary',
           'Connection'                => 'Keep-Alive',
           'Expires'                   => '0',

@@ -5,6 +5,10 @@ namespace MutovSlingr\Views;
 
 abstract class View implements ViewInterface
 {
+
+    /**
+     * @var string
+     */
     const CONTENT_TYPE = 'text/plain';
 
     /**
@@ -17,7 +21,7 @@ abstract class View implements ViewInterface
     /**
      * @param array $headers
      */
-    public function addHeaders( $headers )
+    public function addHeaders( array $headers )
     {
         $this->headers = array_replace_recursive( $this->headers, $headers );
     }

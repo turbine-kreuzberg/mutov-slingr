@@ -18,5 +18,10 @@ interface ViewInterface
      */
     public function render(array $content);
 
+    /**
+     * @param array $headers
+     */
+    public function addHeaders(array $headers);
+
 
 }
