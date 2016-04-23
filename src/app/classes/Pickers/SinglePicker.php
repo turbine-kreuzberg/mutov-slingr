@@ -22,11 +22,18 @@ class SinglePicker implements PickerInterface
     private $pickerSettings;
 
     /**
+     * @var ProbabilityChecker
+     */
+    private $probabilityChecker;
+
+    /**
      * @param array $settings
      */
     public function __construct(array $settings)
     {
         $this->pickerSettings = new PickerSettings($settings);
+        $this->probabilityChecker = new ProbabilityChecker();
+
     }
 
     /**
@@ -36,7 +43,7 @@ class SinglePicker implements PickerInterface
      */
     public function pickValues(array $foreignObject, $foreignField)
     {
-        if (is_int($this->pickerSettings->getProbability()) && mt_rand(1, 100) >= $this->pickerSettings->getProbability()) {
+        if (!$this->probabilityChecker->hit($this->pickerSettings->getProbability())) {
             return [];
         }
 

@@ -41,6 +41,7 @@ class PickerSettingsTest extends \PHPUnit_Framework_TestCase
     {
         $settings = $this->getPickerSettings();
         $settings['min'] = $settings['max'] + 1;
+        $pickerSettings = new PickerSettings($settings);
     }
 
     public function testGetSeparator()
