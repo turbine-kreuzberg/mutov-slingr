@@ -16,16 +16,17 @@ namespace MutovSlingr\Pickers;
 class SinglePicker implements PickerInterface
 {
 
-    protected $probability;
+    /**
+     * @var PickerSettings
+     */
+    private $pickerSettings;
 
     /**
      * @param array $settings
      */
     public function __construct(array $settings)
     {
-        if (isset($settings['probability'])) {
-            $this->probability = (int) $settings['probability'];
-        }
+        $this->pickerSettings = new PickerSettings($settings);
     }
 
     /**
@@ -35,7 +36,7 @@ class SinglePicker implements PickerInterface
      */
     public function pickValues(array $foreignObject, $foreignField)
     {
-        if (is_int($this->probability) && mt_rand(1, 100) >= $this->probability) {
+        if (is_int($this->pickerSettings->getProbability()) && mt_rand(1, 100) >= $this->pickerSettings->getProbability()) {
             return [];
         }
 

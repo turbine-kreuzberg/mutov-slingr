@@ -17,24 +17,9 @@ class RandomPicker implements PickerInterface
 {
 
     /**
-     * @var int
+     * @var PickerSettings
      */
-    protected $min;
-
-    /**
-     * @var int
-     */
-    protected $max;
-
-    /**
-     * @var int
-     */
-    protected $probability;
-
-    /**
-     * @var string
-     */
-    protected $separator;
+    private $pickerSettings;
 
     /**
      * RandomPicker constructor.
@@ -42,20 +27,7 @@ class RandomPicker implements PickerInterface
      */
     public function __construct($settings)
     {
-        $this->min = (int)$settings['min'];
-        $this->max = (int)$settings['max'];
-
-        if ($this->min > $this->max) {
-            throw new \LogicException('Minimum is greater than maximum.');
-        }
-
-        if (isset($settings['probability'])) {
-            $this->probability = (int) $settings['probability'];
-        }
-
-        if (isset($settings['separator'])) {
-            $this->separator = $settings['separator'];
-        }
+        $this->pickerSettings = new PickerSettings($settings);
     }
 
     /**
@@ -66,12 +38,12 @@ class RandomPicker implements PickerInterface
      */
     public function pickValues(array $foreignObject, $foreignField)
     {
-        if (is_int($this->probability) && mt_rand(1, 100) >= $this->probability) {
+        if (is_int($this->pickerSettings->getProbability()) && mt_rand(1, 100) >= $this->pickerSettings->getProbability()) {
             return [];
         }
 
-        $min = $this->min;
-        $max = $this->max;
+        $min = $this->pickerSettings->getMin();
+        $max = $this->pickerSettings->getMax();
 
         $countObjects = count($foreignObject);
 
@@ -89,6 +61,8 @@ class RandomPicker implements PickerInterface
             $list = [$list];
         }
 
+        $values = [];
+
         foreach ($list as $item) {
             $values[] = $foreignObject[$item][$foreignField];
         }
@@ -102,11 +76,11 @@ class RandomPicker implements PickerInterface
      */
     private function formatPickedValues(array $values)
     {
-        if (is_null($this->separator)) {
+        if (is_null($this->pickerSettings->getSeparator())) {
             return $values;
         }
 
-        return implode($this->separator, $values);
+        return implode($this->pickerSettings->getSeparator(), $values);
     }
 
 }

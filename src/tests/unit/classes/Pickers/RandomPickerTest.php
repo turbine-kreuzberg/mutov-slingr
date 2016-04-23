@@ -23,15 +23,6 @@ class RandomPickerTest extends Test
         $this->assertEquals([], $values);
     }
 
-    /**
-     * @expectedException \LogicException
-     */
-    public function testShouldThrowExceptionIfMinimumIsGreaterThanMaximum()
-    {
-        $randomPicker = new RandomPicker(['min' => 10, 'max' => 1]);
-        $randomPicker->pickValues([], 'field');
-    }
-
     public function testShouldReturnSinglePickIfOnlyOneElementToPick()
     {
         $randomPicker = new RandomPicker(['min' => 1, 'max' => 1]);
