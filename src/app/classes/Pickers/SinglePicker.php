@@ -19,10 +19,9 @@ class SinglePicker implements PickerInterface
     protected $probability;
 
     /**
-     * SinglePicker constructor.
-     *
+     * @param array $settings
      */
-    public function __construct($settings)
+    public function __construct(array $settings)
     {
         if (isset($settings['probability'])) {
             $this->probability = (int) $settings['probability'];
@@ -30,17 +29,21 @@ class SinglePicker implements PickerInterface
     }
 
     /**
-     * @param string $foreignObject
+     * @param array $foreignObject
      * @param string $foreignField
      * @return array
      */
-    public function pickValues($foreignObject, $foreignField)
+    public function pickValues(array $foreignObject, $foreignField)
     {
-        $values = array();
-
         if (is_int($this->probability) && mt_rand(1, 100) >= $this->probability) {
-            return $values;
+            return [];
         }
+
+        if (count($foreignObject) <= 0) {
+            return [];
+        }
+
+        $values = [];
 
         $key = array_rand($foreignObject, 1);
         $values[] = $foreignObject[$key][$foreignField];

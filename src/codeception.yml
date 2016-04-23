@@ -13,7 +13,7 @@ extensions:
     enabled:
         - Codeception\Extension\Recorder
         - Codeception\Extension\RunFailed
-        - Codeception\Extension\Logger
+#        - Codeception\Extension\Logger
 #    config:
 #        Codeception\Extension\Recorder:
 #            delete_successful: false

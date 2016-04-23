@@ -16,10 +16,25 @@ namespace MutovSlingr\Pickers;
 class RandomPicker implements PickerInterface
 {
 
-    protected $min = null;
-    protected $max = null;
+    /**
+     * @var int
+     */
+    protected $min;
+
+    /**
+     * @var int
+     */
+    protected $max;
+
+    /**
+     * @var int
+     */
     protected $probability;
-    protected $separator = null;
+
+    /**
+     * @var string
+     */
+    protected $separator;
 
     /**
      * RandomPicker constructor.
@@ -29,6 +44,10 @@ class RandomPicker implements PickerInterface
     {
         $this->min = (int)$settings['min'];
         $this->max = (int)$settings['max'];
+
+        if ($this->min > $this->max) {
+            throw new \LogicException('Minimum is greater than maximum.');
+        }
 
         if (isset($settings['probability'])) {
             $this->probability = (int) $settings['probability'];
@@ -40,25 +59,19 @@ class RandomPicker implements PickerInterface
     }
 
     /**
-     * @param string $foreignObject
+     * @param array $foreignObject
      * @param string $foreignField
      * @return array
      * @throws \Exception
      */
-    public function pickValues($foreignObject, $foreignField)
+    public function pickValues(array $foreignObject, $foreignField)
     {
-        $values = array();
-
         if (is_int($this->probability) && mt_rand(1, 100) >= $this->probability) {
-            return $values;
+            return [];
         }
 
         $min = $this->min;
         $max = $this->max;
-
-        if ($min > $max) {
-            throw new \Exception('Minimum is greater than maximum.');
-        }
 
         $countObjects = count($foreignObject);
 
@@ -73,7 +86,7 @@ class RandomPicker implements PickerInterface
         $list = array_rand($foreignObject, mt_rand($min, $max));
 
         if (is_scalar($list)) {
-            $list = array($list);
+            $list = [$list];
         }
 
         foreach ($list as $item) {

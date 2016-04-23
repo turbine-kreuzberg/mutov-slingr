@@ -7,10 +7,10 @@ interface PickerInterface
 {
 
     /**
-     * @param string $foreignObject
+     * @param array $foreignObject
      * @param string $foreignField
      * @return array
      */
-    public function pickValues($foreignObject, $foreignField);
+    public function pickValues(array $foreignObject, $foreignField);
 
 }
