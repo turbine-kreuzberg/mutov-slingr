@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f00a1b59aa2ae9ce5c578bb623350fae",
-    "content-hash": "8e4bfde96464752985ad58c9af3c54ea",
+    "hash": "80285b620b0e4b5d8c306ea530fb1d79",
+    "content-hash": "639dd0d5ca1d3612419ef196f907e54e",
     "packages": [
         {
             "name": "codeception/codeception",
@@ -822,6 +822,52 @@
                 "password"
             ],
             "time": "2014-11-20 16:49:30"
+        },
+        {
+            "name": "mikey179/vfsStream",
+            "version": "v1.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikey179/vfsStream.git",
+                "reference": "c19925cd0390d3c436a0203ae859afa460d0474b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/c19925cd0390d3c436a0203ae859afa460d0474b",
+                "reference": "c19925cd0390d3c436a0203ae859afa460d0474b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "org\\bovigo\\vfs\\": "src/main/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Frank Kleine",
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Virtual file system to mock the real file system in unit tests.",
+            "homepage": "http://vfs.bovigo.org/",
+            "time": "2016-04-09 09:42:01"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2792,6 +2838,55 @@
                 "framework"
             ],
             "time": "2016-03-27 12:57:53"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "v3.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "0047c8366744a16de7516622c5b7355336afae96"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/0047c8366744a16de7516622c5b7355336afae96",
+                "reference": "0047c8366744a16de7516622c5b7355336afae96",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-03-04 07:55:57"
         },
         {
             "name": "tdt/json",

@@ -28,9 +28,9 @@ class TemplateLoader
     }
 
     /**
-     * @param $templateFileName
+     * @param string $templateFileName
      *
-     * @return mixed|string
+     * @return array
      * @throws \ErrorException
      */
     public function loadTemplate($templateFileName)
@@ -44,12 +44,11 @@ class TemplateLoader
             throw new \ErrorException(sprintf('Template parsing failed: %s', json_last_error_msg()));
         }
 
-        return $contents;
+        return (array)$contents;
     }
 
     /**
      * @param $templateFileName
-     * @return bool
      * @throws \ErrorException
      */
     private function checkTemplateFileIsJsonFile($templateFileName)
@@ -63,8 +62,6 @@ class TemplateLoader
         if (strtolower(array_pop($filenameParts)) !== 'json') {
             throw new \ErrorException('Invalid template filename. Only json files are accepted.');
         }
-
-        return true;
     }
 
     /**
@@ -74,21 +71,24 @@ class TemplateLoader
      */
     private function getFullPathForTemplate($templateFileName)
     {
-        if ($this->checkTemplateFileIsJsonFile($templateFileName))
-        {
-            if (is_file($templateFileName)) {
-                return $templateFileName;
-            }
+        $this->checkTemplateFileIsJsonFile($templateFileName);
 
-            $fullpath = $this->config->get('template_folder') . '/' . $templateFileName;
-
-            if (is_file($fullpath)) {
-                return $fullpath;
-            }
-
-            throw new \ErrorException(sprintf('Invalid template file. File does not seem to exist. Filename: %s, fullpath: %s', $templateFileName, $fullpath));
+        if (is_file($templateFileName)) {
+            return $templateFileName;
         }
 
-        return '';
+        $fullPath = $this->config->get('template_folder') . DIRECTORY_SEPARATOR . $templateFileName;
+
+        if (is_file($fullPath)) {
+            return $fullPath;
+        }
+
+        throw new \ErrorException(
+            sprintf(
+                'Invalid template file. File does not seem to exist. Filename: %s, fullpath: %s',
+                $templateFileName,
+                $fullPath
+            )
+        );
     }
 }
