@@ -15,6 +15,10 @@ use Slim\Interfaces\CollectionInterface;
 class TemplateProcessor
 {
 
+    const TYPE_TEMPLATES = 'templates';
+    const TYPE_RELATIONS = 'relations';
+    const TYPE_POSTPROCESSORS = 'postprocessors';
+
     protected $flatData = null;
 
     /**
@@ -70,10 +74,27 @@ class TemplateProcessor
      */
     public function processTemplate($template)
     {
-        $this->flatData = $this->generateFlatData($template['templates']);
+        foreach ($template as $type => $settings) {
 
-        if (isset($template['relations']) && is_array($template['relations'])) {
-            $this->processRelations($template['relations']);
+            switch ($type) {
+                case self::TYPE_TEMPLATES:
+                    $this->flatData = $this->generateFlatData($settings);
+                    break;
+
+                case self::TYPE_POSTPROCESSORS:
+                    $settings = $settings;
+                    break;
+
+                case self::TYPE_RELATIONS:
+                    if (is_array($settings)) {
+                        $this->processRelations($settings);
+                    }
+                    break;
+
+                default:
+                    /** @todo probably add error handling/logging for unknown/invalid type */
+                    break;
+            }
         }
 
         return $this->flatData;
