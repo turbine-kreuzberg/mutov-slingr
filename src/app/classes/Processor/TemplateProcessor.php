@@ -10,6 +10,8 @@ namespace MutovSlingr\Processor;
 
 use MutovSlingr\Model\Api;
 use MutovSlingr\Pickers\PickerInterface;
+use MutovSlingr\Postprocessors\ConcatRecursivePostprocessor;
+use MutovSlingr\Postprocessors\RemoveFieldsPostprocessor;
 use Slim\Interfaces\CollectionInterface;
 
 class TemplateProcessor
@@ -82,7 +84,7 @@ class TemplateProcessor
                     break;
 
                 case self::TYPE_POSTPROCESSORS:
-                    $settings = $settings;
+                    $this->processPostprocessors($settings);
                     break;
 
                 case self::TYPE_RELATIONS:
@@ -132,6 +134,38 @@ class TemplateProcessor
                 $this->addElement($tableTo, $columnTo, $foreignObject, $foreignField, $pickerInstance);
             }
         }
+    }
+
+    private function processPostprocessors($postprocessors)
+    {
+        $entitiesList = array();
+
+        if (is_array($postprocessors)) {
+            foreach ($postprocessors as $postprocessorSettings) {
+                $postprocessor = null;
+
+                /** @todo add automatic registration and determining for postporcessor plugins  */
+                switch ($postprocessorSettings['type']) {
+                    case 'concat_recursive':
+                        $postprocessor = new ConcatRecursivePostprocessor($this->flatData, $postprocessorSettings);
+                        break;
+
+                    case 'remove_fields':
+                        $postprocessor = new RemoveFieldsPostprocessor($this->flatData, $postprocessorSettings);
+                        break;
+
+                    default:
+                        throw new \Exception('Invalid postprocessor (' . $postprocessorSettings['type'] . ')');
+                        break;
+                }
+
+                if (!is_null($postprocessor)) {
+                    $this->flatData = $postprocessor->getProcessedData();
+                }
+            }
+        }
+
+        return $entitiesList;
     }
 
 }

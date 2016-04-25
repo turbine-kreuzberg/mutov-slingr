@@ -94,7 +94,8 @@ function stripIdFieldFromCategories($categories)
 {
     $categoriesTmp1 = [];
     foreach ($categories as $key => $category) {
-        unset($category['_id']);
+        unset($category['id']);
+        unset($category['parent_id']);
         $categoriesTmp1[$category['_category']] = $category;
     }
 
@@ -134,11 +135,12 @@ $time = microtime(true);
 $products = $data['result']['product'];
 $categories = $data['result']['category'];
 
-//$dryrun = true;
 $dryrun = false;
+//$dryrun = true;
 
 runImport($dryrun, $products, 'product');
-runImport($dryrun, stripIdFieldFromCategories($categories), 'category');
+runImport($dryrun, $categories, 'category');
+//runImport($dryrun, stripIdFieldFromCategories($categories), 'category');
 
 $mapping = array();
 
@@ -151,6 +153,8 @@ foreach ($products as $product) {
     echo str_pad($count++, $len, '0', STR_PAD_LEFT);
     $mapping = array_merge($mapping, getCategoriesForProduct($product));
 }
+
+echo PHP_EOL;
 
 //file_put_contents('testmapping.php', '<?php $mapping =' . var_export($mapping, true) . ';');
 //include_once 'testmapping.php';

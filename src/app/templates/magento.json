@@ -144,10 +144,18 @@
         "rows": [
           {
             "type": "AutoIncrement",
-            "title": "_id",
+            "title": "id",
             "settings": {
               "incrementStart": 1,
               "incrementValue": 1
+            }
+          },
+          {
+            "type": "Tree",
+            "title": "parent_id",
+            "settings": {
+              "autoIncRowNum": 1,
+              "maxSiblings": 5
             }
           },
           {
@@ -224,6 +232,24 @@
           }
         }
       }
+    }
+  ],
+  "postprocessors" : [
+    {
+      "type": "concat_recursive",
+      "object": "category",
+      "fieldId": "id",
+      "fieldParentId": "parent_id",
+      "fieldToConcat": "_category",
+      "concatenateChar": "/"
+    },
+    {
+      "type": "remove_fields",
+      "object": "category",
+      "fieldsToRemove": [
+        "id",
+        "parent_id"
+      ]
     }
   ],
   "relations" : {
