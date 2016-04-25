@@ -90,30 +90,8 @@ function runImport($dryrun, $data, $type)
  * @param $categories
  * @return array
  */
-function stripIdFieldFromCategories($categories)
-{
-    $categoriesTmp1 = [];
-    foreach ($categories as $key => $category) {
-        unset($category['_id']);
-        $categoriesTmp1[$category['_category']] = $category;
-    }
-
-    $categoriesTmp2 = [];
-    foreach ($categoriesTmp1 as $category) {
-        $categoriesTmp2[] = $category;
-    }
-
-    return $categoriesTmp2;
-}
-
-/**
- * @param $product
- * @param $categories
- * @return array
- */
 function getCategoriesForProduct($product) {
     $categoryProductMapping = array();
-//    $categoryIds = explode(',', $product['category_ids']);
 
     $categoryPositions = [];
 
@@ -134,11 +112,11 @@ $time = microtime(true);
 $products = $data['result']['product'];
 $categories = $data['result']['category'];
 
-//$dryrun = true;
 $dryrun = false;
+//$dryrun = true;
 
 runImport($dryrun, $products, 'product');
-runImport($dryrun, stripIdFieldFromCategories($categories), 'category');
+runImport($dryrun, $categories, 'category');
 
 $mapping = array();
 
@@ -151,6 +129,8 @@ foreach ($products as $product) {
     echo str_pad($count++, $len, '0', STR_PAD_LEFT);
     $mapping = array_merge($mapping, getCategoriesForProduct($product));
 }
+
+echo PHP_EOL;
 
 //file_put_contents('testmapping.php', '<?php $mapping =' . var_export($mapping, true) . ';');
 //include_once 'testmapping.php';

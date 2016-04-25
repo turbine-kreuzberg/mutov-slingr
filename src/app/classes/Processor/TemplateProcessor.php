@@ -10,10 +10,16 @@ namespace MutovSlingr\Processor;
 
 use MutovSlingr\Model\Api;
 use MutovSlingr\Pickers\PickerInterface;
+use MutovSlingr\Postprocessors\ConcatRecursivePostprocessor;
+use MutovSlingr\Postprocessors\RemoveFieldsPostprocessor;
 use Slim\Interfaces\CollectionInterface;
 
 class TemplateProcessor
 {
+
+    const TYPE_TEMPLATES = 'templates';
+    const TYPE_RELATIONS = 'relations';
+    const TYPE_POSTPROCESSORS = 'postprocessors';
 
     protected $flatData = null;
 
@@ -70,10 +76,27 @@ class TemplateProcessor
      */
     public function processTemplate($template)
     {
-        $this->flatData = $this->generateFlatData($template['templates']);
+        foreach ($template as $type => $settings) {
 
-        if (isset($template['relations']) && is_array($template['relations'])) {
-            $this->processRelations($template['relations']);
+            switch ($type) {
+                case self::TYPE_TEMPLATES:
+                    $this->flatData = $this->generateFlatData($settings);
+                    break;
+
+                case self::TYPE_POSTPROCESSORS:
+                    $this->processPostprocessors($settings);
+                    break;
+
+                case self::TYPE_RELATIONS:
+                    if (is_array($settings)) {
+                        $this->processRelations($settings);
+                    }
+                    break;
+
+                default:
+                    /** @todo probably add error handling/logging for unknown/invalid type */
+                    break;
+            }
         }
 
         return $this->flatData;
@@ -111,6 +134,38 @@ class TemplateProcessor
                 $this->addElement($tableTo, $columnTo, $foreignObject, $foreignField, $pickerInstance);
             }
         }
+    }
+
+    private function processPostprocessors($postprocessors)
+    {
+        $entitiesList = array();
+
+        if (is_array($postprocessors)) {
+            foreach ($postprocessors as $postprocessorSettings) {
+                $postprocessor = null;
+
+                /** @todo add automatic registration and determining for postporcessor plugins  */
+                switch ($postprocessorSettings['type']) {
+                    case 'concat_recursive':
+                        $postprocessor = new ConcatRecursivePostprocessor($this->flatData, $postprocessorSettings);
+                        break;
+
+                    case 'remove_fields':
+                        $postprocessor = new RemoveFieldsPostprocessor($this->flatData, $postprocessorSettings);
+                        break;
+
+                    default:
+                        throw new \Exception('Invalid postprocessor (' . $postprocessorSettings['type'] . ')');
+                        break;
+                }
+
+                if (!is_null($postprocessor)) {
+                    $this->flatData = $postprocessor->getProcessedData();
+                }
+            }
+        }
+
+        return $entitiesList;
     }
 
 }
