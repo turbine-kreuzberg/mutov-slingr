@@ -155,7 +155,8 @@
             "title": "parent_id",
             "settings": {
               "autoIncRowNum": 1,
-              "maxSiblings": 5
+              "maxSiblings": 5,
+              "rootNodes": 5
             }
           },
           {

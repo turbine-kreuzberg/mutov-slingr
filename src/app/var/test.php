@@ -90,31 +90,8 @@ function runImport($dryrun, $data, $type)
  * @param $categories
  * @return array
  */
-function stripIdFieldFromCategories($categories)
-{
-    $categoriesTmp1 = [];
-    foreach ($categories as $key => $category) {
-        unset($category['id']);
-        unset($category['parent_id']);
-        $categoriesTmp1[$category['_category']] = $category;
-    }
-
-    $categoriesTmp2 = [];
-    foreach ($categoriesTmp1 as $category) {
-        $categoriesTmp2[] = $category;
-    }
-
-    return $categoriesTmp2;
-}
-
-/**
- * @param $product
- * @param $categories
- * @return array
- */
 function getCategoriesForProduct($product) {
     $categoryProductMapping = array();
-//    $categoryIds = explode(',', $product['category_ids']);
 
     $categoryPositions = [];
 
@@ -140,7 +117,6 @@ $dryrun = false;
 
 runImport($dryrun, $products, 'product');
 runImport($dryrun, $categories, 'category');
-//runImport($dryrun, stripIdFieldFromCategories($categories), 'category');
 
 $mapping = array();
 
