@@ -40,12 +40,10 @@
             }
           },
           {
-            "type": "TextRandom",
+            "type": "Product",
             "title": "name",
             "settings": {
-              "startsWithLipsum": false,
-              "minWords": 1,
-              "maxWords": 4
+              "fieldName": "name"
             }
           },
           {
