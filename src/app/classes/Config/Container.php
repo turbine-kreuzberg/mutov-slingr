@@ -9,6 +9,7 @@ use MutovSlingr\Controller\SlingrController;
 use MutovSlingr\Controller\FrontController;
 use MutovSlingr\Loader\TemplateLoader;
 use MutovSlingr\Model\Api;
+use MutovSlingr\Pickers\PickerFactory;
 use MutovSlingr\Processor\TemplateProcessor;
 use MutovSlingr\Views\ViewHtml;
 use MutovSlingr\Views\ViewJson;
@@ -25,7 +26,8 @@ class Container
         $container[TemplateProcessor::class] = function (\Slim\Container $container) {
             $class = new TemplateProcessor(
                 $container->get(Api::class),
-                $container->get('settings')
+                $container->get('settings'),
+                $container->get(PickerFactory::class)
             );
 
             return $class;
@@ -57,6 +59,10 @@ class Container
             $class = new TemplateLoader($container->get('settings'));
 
             return $class;
+        };
+
+        $container[PickerFactory::class] = function () {
+            return new PickerFactory();
         };
 
         $container[SlingrController::class] = function (\Slim\Container $container) {

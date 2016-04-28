@@ -9,6 +9,7 @@
 namespace MutovSlingr\Processor;
 
 use MutovSlingr\Model\Api;
+use MutovSlingr\Pickers\PickerFactory;
 use MutovSlingr\Pickers\PickerInterface;
 use MutovSlingr\Postprocessors\ConcatRecursivePostprocessor;
 use MutovSlingr\Postprocessors\RemoveFieldsPostprocessor;
@@ -34,14 +35,25 @@ class TemplateProcessor
     private $config;
 
     /**
+     * @var PickerFactory
+     */
+    private $pickerFactory;
+
+    /**
      * TemplateProcessor constructor.
      * @param Api $api
      * @param CollectionInterface $config
+     * @param PickerFactory $pickerFactory
      */
-    public function __construct(Api $api, CollectionInterface $config)
+    public function __construct(
+        Api $api,
+        CollectionInterface $config,
+        PickerFactory $pickerFactory
+    )
     {
         $this->config = $config;
         $this->api = $api;
+        $this->pickerFactory = $pickerFactory;
     }
 
     /**
@@ -49,70 +61,65 @@ class TemplateProcessor
      *
      * @return array
      */
-    protected function generateFlatData($templatesContent)
+    protected function generateFlatData(array $templatesContent)
     {
         $entitiesList = array();
 
-        if (is_array($templatesContent)) {
-            foreach ($templatesContent as $template) {
-                $label = $template['label'];
-                $templateDefinition = $template['definition'];
+        foreach ($templatesContent as $template) {
+            //TODO: add validation or better schema validation
+            $label = $template['label'];
+            $templateDefinition = $template['definition'];
 
-                $templateDefinition = array_merge($templateDefinition,
-                    $this->config->get('data_generator_export_configuration'));
+            $templateDefinition = array_merge(
+                $templateDefinition,
+                $this->config->get('data_generator_export_configuration')
+            );
 
-                $definition = json_encode($templateDefinition);
+            $definition = json_encode($templateDefinition);
 
-                $entitiesList[$label] = json_decode($this->api->apiCall($definition), true);
-            }
+            $apiResult = $this->api->apiCall($definition);
+            $entitiesList[$label] = json_decode($apiResult, true);
         }
 
         return $entitiesList;
     }
 
     /**
-     * @param string $template
+     * @param array $template
+     *
      * @return array|null
+     * @throws \ErrorException
      */
-    public function processTemplate($template)
+    public function processTemplate(array $template)
     {
-        foreach ($template as $type => $settings) {
+        if (!isset($template[self::TYPE_TEMPLATES])) {
+            throw new \ErrorException('No templates to process.');
+        }
 
-            switch ($type) {
-                case self::TYPE_TEMPLATES:
-                    $this->flatData = $this->generateFlatData($settings);
-                    break;
+        $this->flatData = $this->generateFlatData($template[self::TYPE_TEMPLATES]);
 
-                case self::TYPE_POSTPROCESSORS:
-                    $this->processPostprocessors($settings);
-                    break;
+        if (isset($template[self::TYPE_RELATIONS])) {
+            $this->processRelations($template[self::TYPE_RELATIONS]);
+        }
 
-                case self::TYPE_RELATIONS:
-                    if (is_array($settings)) {
-                        $this->processRelations($settings);
-                    }
-                    break;
-
-                default:
-                    /** @todo probably add error handling/logging for unknown/invalid type */
-                    break;
-            }
+        if (isset($template[self::TYPE_POSTPROCESSORS])) {
+            $this->processPostprocessors($template[self::TYPE_POSTPROCESSORS]);
         }
 
         return $this->flatData;
     }
 
     /**
-     * @param $tableTo
-     * @param $columnTo
-     * @param $foreignObject
-     * @param $foreignField
-     * @param PickerInterface $pickerInstance
+     * @param string $tableTo
+     * @param string $columnTo
+     * @param string $foreignObject
+     * @param string $foreignField
+     * @param PickerInterface $picker
      */
-    protected function addElement($tableTo, $columnTo, $foreignObject, $foreignField, PickerInterface $pickerInstance)
+    protected function addElement($tableTo, $columnTo, $foreignObject, $foreignField, PickerInterface $picker)
     {
         foreach ($this->flatData[$tableTo] as $idx => $item) {
-            $values = $pickerInstance->pickValues($this->flatData[$foreignObject], $foreignField);
+            $values = $picker->pickValues($this->flatData[$foreignObject], $foreignField);
             $this->flatData[$tableTo][$idx][$columnTo] = $values;
         }
     }
@@ -127,41 +134,42 @@ class TemplateProcessor
                 $foreignObject = $relationData['foreignObject'];
                 $foreignField = $relationData['foreignField'];
                 $pickerSettings = $relationData['pickerSettings'];
-                $pickerClass = 'MutovSlingr\\Pickers\\' . ucfirst($pickerSettings['type']) . 'Picker';
+                $picker = $this->pickerFactory->createPicker($pickerSettings);
 
-                $pickerInstance = new $pickerClass($pickerSettings);
-
-                $this->addElement($tableTo, $columnTo, $foreignObject, $foreignField, $pickerInstance);
+                $this->addElement($tableTo, $columnTo, $foreignObject, $foreignField, $picker);
             }
         }
     }
 
-    private function processPostprocessors($postprocessors)
+    /**
+     * @param array $postprocessors
+     * @return array
+     * @throws \Exception
+     */
+    private function processPostprocessors(array $postprocessors)
     {
         $entitiesList = array();
 
-        if (is_array($postprocessors)) {
-            foreach ($postprocessors as $postprocessorSettings) {
-                $postprocessor = null;
+        foreach ($postprocessors as $postprocessorSettings) {
+            $postprocessor = null;
 
-                /** @todo add automatic registration and determining for postporcessor plugins  */
-                switch ($postprocessorSettings['type']) {
-                    case 'concat_recursive':
-                        $postprocessor = new ConcatRecursivePostprocessor($this->flatData, $postprocessorSettings);
-                        break;
+            /** @todo add automatic registration and determining for postporcessor plugins  */
+            switch ($postprocessorSettings['type']) {
+                case 'concat_recursive':
+                    $postprocessor = new ConcatRecursivePostprocessor($this->flatData, $postprocessorSettings);
+                    break;
 
-                    case 'remove_fields':
-                        $postprocessor = new RemoveFieldsPostprocessor($this->flatData, $postprocessorSettings);
-                        break;
+                case 'remove_fields':
+                    $postprocessor = new RemoveFieldsPostprocessor($this->flatData, $postprocessorSettings);
+                    break;
 
-                    default:
-                        throw new \Exception('Invalid postprocessor (' . $postprocessorSettings['type'] . ')');
-                        break;
-                }
+                default:
+                    throw new \Exception('Invalid postprocessor (' . $postprocessorSettings['type'] . ')');
+                    break;
+            }
 
-                if (!is_null($postprocessor)) {
-                    $this->flatData = $postprocessor->getProcessedData();
-                }
+            if (!is_null($postprocessor)) {
+                $this->flatData = $postprocessor->getProcessedData();
             }
         }
 
