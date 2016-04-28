@@ -96,7 +96,7 @@ magento_config:
    admin_password: "magento123"
    skip_url_validation: "no"
 magento_modman_extensions_git:
-  - repo: https://github.com/avstudnitz/AvS_FastSimpleImport
+  - repo: https://github.com/votum/AvS_FastSimpleImport
     name: "AvS_FastSimpleImport"
     dest: /var/www/magento-extensions
 
