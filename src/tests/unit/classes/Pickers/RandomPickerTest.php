@@ -12,20 +12,30 @@ namespace MutovSlingr\Test\Unit\Pickers;
 
 
 use Codeception\TestCase\Test;
+use MutovSlingr\Pickers\PickerSettings;
+use MutovSlingr\Pickers\ProbabilityChecker;
 use MutovSlingr\Pickers\RandomPicker;
 
 class RandomPickerTest extends Test
 {
     public function testShouldReturnNoPickedValueIfOutOfProbability()
     {
-        $randomPicker = new RandomPicker(['min' => 1, 'max' => 10, 'probability' => -1]);
+        $pickerSettingsMock = $this->getSettingsMocking();
+
+        $probabilityCheckerMock = $this->getMockBuilder(ProbabilityChecker::class)->getMock();
+        $probabilityCheckerMock->expects($this->any())->method('hit')->willReturn(false);
+
+        $randomPicker = new RandomPicker($pickerSettingsMock, $probabilityCheckerMock);
         $values = $randomPicker->pickValues([], 'field');
         $this->assertEquals([], $values);
     }
 
     public function testShouldReturnSinglePickIfOnlyOneElementToPick()
     {
-        $randomPicker = new RandomPicker(['min' => 1, 'max' => 1]);
+        $pickerSettingsMock = $this->getSettingsMocking();
+        $pickerSettingsMock->expects($this->any())->method('getMin')->willReturn(1);
+        $pickerSettingsMock->expects($this->any())->method('getMax')->willReturn(1);
+        $randomPicker = new RandomPicker($pickerSettingsMock, $this->getProbabilityCheckerMock());
         $values = $randomPicker->pickValues(
             [['field' => 'value'], ['field' => 'value2']],
             'field'
@@ -35,7 +45,12 @@ class RandomPickerTest extends Test
 
     public function testShouldReturnAtLeastNumberOfMinimumValues()
     {
-        $randomPicker = new RandomPicker(['min' => 2, 'max' => 3]);
+
+        $pickerSettingsMock = $this->getSettingsMocking();
+        $pickerSettingsMock->expects($this->any())->method('getMin')->willReturn(2);
+        $pickerSettingsMock->expects($this->any())->method('getMax')->willReturn(3);
+
+        $randomPicker = new RandomPicker($pickerSettingsMock, $this->getProbabilityCheckerMock());
         $values = $randomPicker->pickValues(
             [
                 ['field' => 'value'],
@@ -50,13 +65,19 @@ class RandomPickerTest extends Test
 
     public function testShouldReturnAtLeastNumberOfMaximumValues()
     {
-        $randomPicker = new RandomPicker(['min' => 2, 'max' => 3]);
+        $pickerSettingsMock = $this->getSettingsMocking();
+        $pickerSettingsMock->expects($this->any())->method('getMin')->willReturn(2);
+        $pickerSettingsMock->expects($this->any())->method('getMax')->willReturn(3);
+
+        $randomPicker = new RandomPicker($pickerSettingsMock, $this->getProbabilityCheckerMock());
         $values = $randomPicker->pickValues(
             [
                 ['field' => 'value'],
                 ['field' => 'value2'],
                 ['field' => 'value3'],
                 ['field' => 'value4'],
+                ['field' => 'value5'],
+                ['field' => 'value6'],
             ],
             'field'
         );
@@ -66,7 +87,11 @@ class RandomPickerTest extends Test
 
     public function testShouldReturnTheExactValues()
     {
-        $randomPicker = new RandomPicker(['min' => 2, 'max' => 2]);
+        $pickerSettingsMock = $this->getSettingsMocking();
+        $pickerSettingsMock->expects($this->any())->method('getMin')->willReturn(2);
+        $pickerSettingsMock->expects($this->any())->method('getMax')->willReturn(2);
+
+        $randomPicker = new RandomPicker($pickerSettingsMock, $this->getProbabilityCheckerMock());
         $values = $randomPicker->pickValues(
             [
                 ['field' => 'value'],
@@ -79,7 +104,12 @@ class RandomPickerTest extends Test
 
     public function testShouldReturnStringOfSeparatedValues()
     {
-        $randomPicker = new RandomPicker(['min' => 2, 'max' => 2, 'separator' => '|']);
+        $pickerSettingsMock = $this->getSettingsMocking();
+        $pickerSettingsMock->expects($this->any())->method('getMin')->willReturn(2);
+        $pickerSettingsMock->expects($this->any())->method('getMax')->willReturn(2);
+        $pickerSettingsMock->expects($this->any())->method('getSeparator')->willReturn('|');
+
+        $randomPicker = new RandomPicker($pickerSettingsMock, $this->getProbabilityCheckerMock());
         $values = $randomPicker->pickValues(
             [
                 ['field' => 'value'],
@@ -90,6 +120,26 @@ class RandomPickerTest extends Test
         $this->assertEquals('value|value2', $values);
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|ProbabilityChecker
+     */
+    private function getProbabilityCheckerMock()
+    {
+        $probabilityCheckerMock = $this->getMockBuilder(ProbabilityChecker::class)->getMock();
+        $probabilityCheckerMock->expects($this->any())->method('hit')->willReturn(true);
+        return $probabilityCheckerMock;
+    }
 
-    
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|PickerSettings
+     */
+    private function getSettingsMocking()
+    {
+        $pickerSettingsMock = $this->getMockBuilder(PickerSettings::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        return $pickerSettingsMock;
+    }
+
+
 }

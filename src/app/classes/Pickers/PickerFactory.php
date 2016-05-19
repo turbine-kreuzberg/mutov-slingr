@@ -24,7 +24,11 @@ class PickerFactory
             throw new \ErrorException(sprintf('Class "%s" does not exist.', $pickerClass));
         }
 
-        return new $pickerClass($pickerSettings);
+        $pickerSettings = new PickerSettings($pickerSettings);
+
+        $probabilityChecker = new ProbabilityChecker();
+
+        return new $pickerClass($pickerSettings, $probabilityChecker);
     }
 
 }
