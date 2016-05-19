@@ -87,7 +87,7 @@ class TemplateProcessor
     /**
      * @param array $template
      *
-     * @return array|null
+     * @return array
      * @throws \ErrorException
      */
     public function processTemplate(array $template)
@@ -96,14 +96,27 @@ class TemplateProcessor
             throw new \ErrorException('No templates to process.');
         }
 
-        $this->flatData = $this->generateFlatData($template[self::TYPE_TEMPLATES]);
+        foreach ($template as $type => $settings) {
 
-        if (isset($template[self::TYPE_RELATIONS])) {
-            $this->processRelations($template[self::TYPE_RELATIONS]);
-        }
+            switch ($type) {
+                case self::TYPE_TEMPLATES:
+                    $this->flatData = $this->generateFlatData($settings);
+                    break;
 
-        if (isset($template[self::TYPE_POSTPROCESSORS])) {
-            $this->processPostprocessors($template[self::TYPE_POSTPROCESSORS]);
+                case self::TYPE_POSTPROCESSORS:
+                    $this->processPostprocessors($settings);
+                    break;
+
+                case self::TYPE_RELATIONS:
+                    if (is_array($settings)) {
+                        $this->processRelations($settings);
+                    }
+                    break;
+
+                default:
+                    /** @todo probably add error handling/logging for unknown/invalid type */
+                    break;
+            }
         }
 
         return $this->flatData;
