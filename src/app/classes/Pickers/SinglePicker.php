@@ -27,13 +27,13 @@ class SinglePicker implements PickerInterface
     private $probabilityChecker;
 
     /**
-     * @param array $settings
+     * @param PickerSettings $settings
+     * @param ProbabilityChecker $probabilityChecker
      */
-    public function __construct(array $settings)
+    public function __construct(PickerSettings $settings, ProbabilityChecker $probabilityChecker)
     {
-        $this->pickerSettings = new PickerSettings($settings);
-        $this->probabilityChecker = new ProbabilityChecker();
-
+        $this->pickerSettings = $settings;
+        $this->probabilityChecker = $probabilityChecker;
     }
 
     /**

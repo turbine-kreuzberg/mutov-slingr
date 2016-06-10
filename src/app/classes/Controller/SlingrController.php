@@ -83,6 +83,9 @@ class SlingrController extends AbstractController
         $jsonContent = $request->getParsedBody()['json_content'];
         $contents = json_decode($jsonContent, true);
 
+        if (!$contents) {
+            throw new \ErrorException('No template content given.');
+        }
         $result = $this->processor->processTemplate($contents);
 
         return $this->getView($outputFormat)->render(array('result' => $result));
@@ -118,7 +121,7 @@ class SlingrController extends AbstractController
      * @param $fileName
      * @return array
      */
-    public function getDownloadHeadersForFile( $fileName )
+    private function getDownloadHeadersForFile( $fileName )
     {
         return array(
           'Content-Description'       => 'File Transfer',

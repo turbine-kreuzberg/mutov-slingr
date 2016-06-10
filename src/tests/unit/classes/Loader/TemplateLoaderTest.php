@@ -16,10 +16,11 @@ use MutovSlingr\Loader\TemplateLoader;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
+use Slim\Interfaces\CollectionInterface;
 
 class TemplateLoaderTest extends Test
 {
-    const VALID_CONTENT = ['test' => 'value'];
+    private $validContent = ['test' => 'value'];
 
 
     public function setUp()
@@ -67,7 +68,7 @@ class TemplateLoaderTest extends Test
     {
         $this->setupFile();
         $templateLoader = new TemplateLoader($this->getConfigMock());
-        $this->assertEquals(self::VALID_CONTENT, $templateLoader->loadTemplate(vfsStream::url('templateFolder') . '/someFile.json'));
+        $this->assertEquals($this->validContent, $templateLoader->loadTemplate(vfsStream::url('templateFolder') . '/someFile.json'));
     }
 
     public function testShouldReturnValidJsonFromSettingsTemplateFolder()
@@ -79,7 +80,7 @@ class TemplateLoaderTest extends Test
             ->willReturn(vfsStream::url('templateFolder'));
 
         $templateLoader = new TemplateLoader($configMock);
-        $this->assertEquals(self::VALID_CONTENT, $templateLoader->loadTemplate('/someFile.json'));
+        $this->assertEquals($this->validContent, $templateLoader->loadTemplate('/someFile.json'));
     }
 
     /**
@@ -87,7 +88,7 @@ class TemplateLoaderTest extends Test
      */
     private function getConfigMock()
     {
-        return $this->getMockBuilder('\Slim\Interfaces\CollectionInterface')
+        return $this->getMockBuilder(CollectionInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -95,7 +96,7 @@ class TemplateLoaderTest extends Test
     private function setupFile()
     {
         $file = vfsStream::newFile('someFile.json');
-        $testContentJson = json_encode(self::VALID_CONTENT);
+        $testContentJson = json_encode($this->validContent);
         $file->setContent($testContentJson);
         vfsStreamWrapper::getRoot()->addChild($file);
     }

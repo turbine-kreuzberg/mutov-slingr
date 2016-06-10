@@ -28,12 +28,13 @@ class RandomPicker implements PickerInterface
 
     /**
      * RandomPicker constructor.
-     * @param $settings
+     * @param PickerSettings $settings
+     * @param ProbabilityChecker $probabilityChecker
      */
-    public function __construct($settings)
+    public function __construct(PickerSettings $settings, ProbabilityChecker $probabilityChecker)
     {
-        $this->pickerSettings = new PickerSettings($settings);
-        $this->probabilityChecker = new ProbabilityChecker();
+        $this->pickerSettings = $settings;
+        $this->probabilityChecker = $probabilityChecker;
     }
 
     /**
@@ -48,18 +49,9 @@ class RandomPicker implements PickerInterface
             return [];
         }
 
-        $min = $this->pickerSettings->getMin();
-        $max = $this->pickerSettings->getMax();
-
         $countObjects = count($foreignObject);
-
-        if ($min >= $countObjects) {
-            $min = $countObjects;
-        }
-
-        if ($max >= $countObjects) {
-            $max = $countObjects;
-        }
+        $min = min($countObjects, $this->pickerSettings->getMin());
+        $max = min($countObjects, $this->pickerSettings->getMax());
 
         $list = array_rand($foreignObject, mt_rand($min, $max));
 
